@@ -307,6 +307,7 @@
   .rest-card.wanwan::before { background:#ff3b30; }
   .rest-card.ziqing::before { background:#5856d6; }
   .rest-card.pier::before { background:#007aff; }
+  .rest-card.couple::before { background: linear-gradient(90deg, #ff3b30 0%, #007aff 100%); }
 
   .rest-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
   .rest-card-name { font-size:15px; font-weight:700; }
@@ -325,10 +326,13 @@
     background:#f2f2f7; color:var(--text-secondary);
     cursor: default; position:relative;
   }
-  .rest-mini-day.busy { background:#fff0ef; color:#ff3b30; font-weight:700; }
-  .rest-mini-day.rest  { background:#e8f8ed; color:#34c759; }
-  .rest-mini-day.today { outline: 2px solid var(--accent3); outline-offset:1px; }
-  .rest-mini-day.past  { opacity:0.4; }
+  .rest-mini-day.rest      { background:#e8f8ed; color:#34c759; }
+  .rest-mini-day.busy      { background:#fff0ef; color:#ff3b30; font-weight:700; }
+  .rest-mini-day.ww-only   { background:#ff3b30; color:#fff; font-weight:700; }
+  .rest-mini-day.pr-only   { background:#007aff; color:#fff; font-weight:700; }
+  .rest-mini-day.both-busy { background:linear-gradient(135deg, #ff3b30 50%, #007aff 50%); color:#fff; font-weight:700; }
+  .rest-mini-day.today     { outline: 2px solid var(--accent3); outline-offset:1px; }
+  .rest-mini-day.past      { opacity:0.4; }
   .rest-mini-day.clickable { cursor:pointer; transition: all 0.15s; }
   .rest-mini-day.clickable:hover { transform: scale(1.2); z-index:2; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
   .rest-mini-day.clickable:active { transform: scale(0.9); }
@@ -673,7 +677,7 @@
       <div class="stat-label" style="color:#aeaeb2;">点击查看 ▼</div>
     </div>
   </div>
-  <div id="finance-detail" class="finance-detail" style="display:none;">
+  <div id="finance-detail" class="finance-detail">
     <div class="stats-scroll" style="margin-top:8px;">
       <div class="stat-card">
         <div class="stat-value">¥9,400</div>
@@ -713,11 +717,10 @@
 
   <!-- Section 1: Projects -->
   <div class="section" id="sec-projects">
-    <div class="section-title" style="cursor:pointer" onclick="toggleSection('projects')">
+    <div class="section-title">
       <span class="icon">📌</span> 项目看板
-      <span id="projects-arrow" style="font-size:12px;color:var(--text-secondary);margin-left:auto">▼ 展开</span>
     </div>
-    <div class="project-grid collapsible" id="projects-grid" style="display:none">
+    <div class="project-grid collapsible" id="projects-grid">
 
       <!-- ⚡ 盒马梭子蟹 8/9 -->
       <div class="project-card ziqing">
@@ -1493,103 +1496,260 @@
     let html = '';
 
     // Legend
-    html += '<div class="rest-legend"><span><span class="dot rest-dot"></span>🟢 休息日（点击添加计划）</span><span><span class="dot busy-dot"></span>🔴 任务日（点击看详情）</span><span style="color:var(--accent3)">▣ 今天</span></div>';
+    if (filter === 'all') {
+      html += '<div class="rest-legend"><span><span class="dot" style="background:#34c759"></span>🟢 共同休息</span><span><span class="dot" style="background:#ff3b30"></span>🔴 弯弯忙</span><span><span class="dot" style="background:#007aff"></span>🔵 Pier忙</span><span><span class="dot" style="background:linear-gradient(135deg,#ff3b30,#007aff)"></span>🟣 都忙</span><span style="color:var(--accent3)">▣ 今天</span></div>';
+    } else {
+      html += '<div class="rest-legend"><span><span class="dot rest-dot"></span>🟢 休息日（点击添加计划）</span><span><span class="dot busy-dot"></span>🔴 任务日（点击看详情）</span><span style="color:var(--accent3)">▣ 今天</span></div>';
+    }
 
-    const people = ['wanwan','ziqing','pier'];
-    for (const key of people) {
-      if (filter !== 'all' && filter !== key) continue;
-      const p = taskData[key];
-      const busySet = new Set(p.busyDays.map(b => b.day));
-      let restCount = 0, busyCount = 0;
+    if (filter === 'all') {
+      // ═══ Couple card: wanwan + pier merged ═══
+      const ww = taskData['wanwan'];
+      const pr = taskData['pier'];
+      const wwBusy = new Set(ww.busyDays.map(b => b.day));
+      const prBusy = new Set(pr.busyDays.map(b => b.day));
+      let restCount = 0, wwCount = 0, prCount = 0, bothCount = 0;
       const plans = loadAllPlans();
 
-      // Build mini calendar (8/1 - 8/31)
       let calHtml = '';
       for (let d = 1; d <= 31; d++) {
         let cls = 'clickable';
-        if (busySet.has(d)) {
-          cls += ' busy';
-          busyCount++;
-        } else {
+        const wHas = wwBusy.has(d);
+        const pHas = prBusy.has(d);
+        if (!wHas && !pHas) {
           cls += ' rest';
           restCount++;
+        } else if (wHas && !pHas) {
+          cls += ' ww-only';
+          wwCount++;
+        } else if (!wHas && pHas) {
+          cls += ' pr-only';
+          prCount++;
+        } else {
+          cls += ' both-busy';
+          bothCount++;
         }
         if (d < TODAY) cls += ' past';
         if (d === TODAY) cls += ' today';
-        const planDot = plans[key + '_' + d] ? '<span class="plan-dot"></span>' : '';
-        calHtml += '<div class="rest-mini-day ' + cls + '" onclick="openDayDetail(\''+key+'\','+d+')">' + d + planDot + '</div>';
+        const planDot = (plans['wanwan_' + d] || plans['pier_' + d]) ? '<span class="plan-dot"></span>' : '';
+        calHtml += '<div class="rest-mini-day ' + cls + '" onclick="openDayDetail(\'couple\','+d+')">' + d + planDot + '</div>';
       }
 
-      // Suggestion
+      // Couple suggestion — smart analysis
+      const coupleBusyDays = [...new Set([...wwBusy, ...prBusy])].sort((a,b)=>a-b);
+      const busySet = new Set(coupleBusyDays);
       let sugHtml = '';
-      if (p.suggestion) {
-        sugHtml = '<div class="rest-suggestion">' + p.suggestion + '</div>';
+
+      if (coupleBusyDays.length <= 5) {
+        const daysStr = coupleBusyDays.map(d=>d+'日').join('、');
+        sugHtml = '<div class="rest-no-suggestion">🎉 本月仅'+coupleBusyDays.length+'个任务日（'+daysStr+'），其余均可共同安排</div>';
       } else {
-        // Pier: very light month
-        const allTaskDays = [...busySet].sort((a,b)=>a-b).map(d=>d+'日').join('、');
-        sugHtml = '<div class="rest-no-suggestion">🎉 本月仅3个任务日（'+allTaskDays+'），其余28天均可自由安排</div>';
+        // Find isolated busy days (busy, but both neighbors are rest)
+        const isolated = [];
+        for (const d of coupleBusyDays) {
+          const prevRest = d === 1 || !busySet.has(d - 1);
+          const nextRest = d === 31 || !busySet.has(d + 1);
+          if (prevRest && nextRest) isolated.push(d);
+        }
+
+        // Find longest continuous rest block
+        let longestStart = 1, longestLen = 0;
+        let curStart = 1, curLen = 0;
+        for (let d = 1; d <= 31; d++) {
+          if (!busySet.has(d)) {
+            if (curLen === 0) curStart = d;
+            curLen++;
+            if (curLen > longestLen) { longestStart = curStart; longestLen = curLen; }
+          } else {
+            curLen = 0;
+          }
+        }
+
+        if (isolated.length > 0) {
+          const isolatedStr = isolated.map(d=>d+'日').join('、');
+          if (isolated.length <= 3) {
+            sugHtml = '<div class="rest-suggestion">💡 '+isolatedStr+'是孤立的忙碌日（前后均为休息），若能并入相邻任务日，当前最长连续休息可从'+longestLen+'天延长至'+(longestLen+isolated.length)+'天</div>';
+          } else {
+            sugHtml = '<div class="rest-suggestion">💡 本月有'+isolated.length+'个孤立忙碌日（如'+isolated.slice(0,3).map(d=>d+'日').join('、')+'等），集中调整可大幅增加连续休息天数</div>';
+          }
+        } else if (longestLen >= 5) {
+          sugHtml = '<div class="rest-suggestion">📅 最长连续共同休息：'+longestStart+'日—'+(longestStart+longestLen-1)+'日（共'+longestLen+'天），可提前规划出行</div>';
+        } else {
+          sugHtml = '<div class="rest-suggestion">📊 本月任务分布均匀，最长连续休息仅'+longestLen+'天，暂无明显调整空间</div>';
+        }
       }
 
       html += `
-        <div class="rest-card ${p.cls}" data-person="${key}">
+        <div class="rest-card couple" data-person="couple">
           <div class="rest-card-header">
-            <span class="rest-card-name">${p.emoji} ${p.name}</span>
+            <span class="rest-card-name">💕 弯弯 + Pier</span>
             <div class="rest-card-summary">
               <div class="rest-summary-item">
                 <div class="rest-summary-val green">${restCount}天</div>
-                <div class="rest-summary-lbl">可休息</div>
+                <div class="rest-summary-lbl">共同休息</div>
               </div>
               <div class="rest-summary-item">
-                <div class="rest-summary-val red">${busyCount}天</div>
-                <div class="rest-summary-lbl">任务日</div>
+                <div class="rest-summary-val red">${wwCount}天</div>
+                <div class="rest-summary-lbl">弯弯忙</div>
+              </div>
+              <div class="rest-summary-item">
+                <div class="rest-summary-val" style="color:#007aff">${prCount}天</div>
+                <div class="rest-summary-lbl">Pier忙</div>
+              </div>
+              <div class="rest-summary-item">
+                <div class="rest-summary-val" style="color:#af52de">${bothCount}天</div>
+                <div class="rest-summary-lbl">都忙</div>
               </div>
             </div>
           </div>
           <div class="rest-mini-cal">${calHtml}</div>
           ${sugHtml}
         </div>`;
+
+      // ═══ Ziqing card (always shown in 'all' mode) ═══
+      html += renderPersonRestCard('ziqing', plans);
+    } else {
+      // Single person mode
+      html += renderPersonRestCard(filter, loadAllPlans());
     }
+
     container.innerHTML = html;
+  }
+
+  function renderPersonRestCard(key, plans) {
+    const p = taskData[key];
+    const busySet = new Set(p.busyDays.map(b => b.day));
+    let restCount = 0, busyCount = 0;
+
+    let calHtml = '';
+    for (let d = 1; d <= 31; d++) {
+      let cls = 'clickable';
+      if (busySet.has(d)) {
+        cls += ' busy';
+        busyCount++;
+      } else {
+        cls += ' rest';
+        restCount++;
+      }
+      if (d < TODAY) cls += ' past';
+      if (d === TODAY) cls += ' today';
+      const planDot = plans[key + '_' + d] ? '<span class="plan-dot"></span>' : '';
+      calHtml += '<div class="rest-mini-day ' + cls + '" onclick="openDayDetail(\''+key+'\','+d+')">' + d + planDot + '</div>';
+    }
+
+    let sugHtml = '';
+    if (p.suggestion) {
+      sugHtml = '<div class="rest-suggestion">' + p.suggestion + '</div>';
+    } else {
+      const allTaskDays = [...busySet].sort((a,b)=>a-b).map(d=>d+'日').join('、');
+      sugHtml = '<div class="rest-no-suggestion">🎉 本月仅'+busyCount+'个任务日（'+allTaskDays+'），其余'+restCount+'天均可自由安排</div>';
+    }
+
+    return `
+      <div class="rest-card ${p.cls}" data-person="${key}">
+        <div class="rest-card-header">
+          <span class="rest-card-name">${p.emoji} ${p.name}</span>
+          <div class="rest-card-summary">
+            <div class="rest-summary-item">
+              <div class="rest-summary-val green">${restCount}天</div>
+              <div class="rest-summary-lbl">可休息</div>
+            </div>
+            <div class="rest-summary-item">
+              <div class="rest-summary-val red">${busyCount}天</div>
+              <div class="rest-summary-lbl">任务日</div>
+            </div>
+          </div>
+        </div>
+        <div class="rest-mini-cal">${calHtml}</div>
+        ${sugHtml}
+      </div>`;
   }
 
   // ═══ Day Detail Modal ═══
   function openDayDetail(person, day) {
-    const p = taskData[person];
-    const title = p.emoji + ' ' + p.name + ' · 8月' + day + '日';
-    document.getElementById('dayModalTitle').innerHTML = title;
-
-    const busySet = new Set(p.busyDays.map(b => b.day));
     const typeLabel = {outline:'大纲',script:'脚本',shoot:'拍摄',draft:'初稿',visit:'探店',publish:'发布'};
-
     let bodyHtml = '';
 
-    if (busySet.has(day) && day >= TODAY) {
-      // 🔴 Task day → show tasks
-      const tasks = p.busyDays.filter(b => b.day === day);
-      bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">📋 当日任务：</div>';
-      tasks.forEach(t => {
-        bodyHtml += '<div class="day-task-item"><span class="task-type">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+'</div>';
-      });
-    } else if (busySet.has(day) && day < TODAY) {
-      // Past day with tasks → show as completed
-      const tasks = p.busyDays.filter(b => b.day === day);
-      bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">✅ 已完成：</div>';
-      tasks.forEach(t => {
-        bodyHtml += '<div class="day-task-item" style="background:#f2f2f7;color:var(--text-secondary);"><span class="task-type" style="background:#34c759">✓</span> '+t.project+'</div>';
-      });
-    } else {
-      // 🟢 Rest day → add/edit plan
-      const existingPlan = getPlan(person, day);
-      bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">🟢 休息日 — 你可以记录生活计划</div>';
+    if (person === 'couple') {
+      // ═══ Couple mode: show both wanwan + pier ═══
+      document.getElementById('dayModalTitle').innerHTML = '💕 弯弯 + Pier · 8月' + day + '日';
+      const ww = taskData['wanwan'];
+      const pr = taskData['pier'];
+      const wwBusy = new Set(ww.busyDays.map(b => b.day));
+      const prBusy = new Set(pr.busyDays.map(b => b.day));
+      const isWwBusy = wwBusy.has(day);
+      const isPrBusy = prBusy.has(day);
 
-      if (existingPlan) {
-        bodyHtml += '<div class="day-plan-existing">📝 当前计划：<br>' + existingPlan.replace(/\n/g,'<br>') + '</div>';
+      if ((isWwBusy || isPrBusy) && day >= TODAY) {
+        bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">📋 当日任务：</div>';
+        if (isWwBusy) {
+          ww.busyDays.filter(b => b.day === day).forEach(t => {
+            bodyHtml += '<div class="day-task-item"><span class="task-type" style="background:#ff3b30">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+' <span style="color:#ff3b30;font-size:11px;margin-left:4px;">👩 弯弯</span></div>';
+          });
+        }
+        if (isPrBusy) {
+          pr.busyDays.filter(b => b.day === day).forEach(t => {
+            bodyHtml += '<div class="day-task-item"><span class="task-type" style="background:#007aff">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+' <span style="color:#007aff;font-size:11px;margin-left:4px;">👨 Pier</span></div>';
+          });
+        }
+      } else if ((isWwBusy || isPrBusy) && day < TODAY) {
+        bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">✅ 已完成：</div>';
+        if (isWwBusy) {
+          ww.busyDays.filter(b => b.day === day).forEach(t => {
+            bodyHtml += '<div class="day-task-item" style="background:#f2f2f7;color:var(--text-secondary);"><span class="task-type" style="background:#34c759">✓</span> '+t.project+' <span style="font-size:11px;margin-left:4px;">👩 弯弯</span></div>';
+          });
+        }
+        if (isPrBusy) {
+          pr.busyDays.filter(b => b.day === day).forEach(t => {
+            bodyHtml += '<div class="day-task-item" style="background:#f2f2f7;color:var(--text-secondary);"><span class="task-type" style="background:#34c759">✓</span> '+t.project+' <span style="font-size:11px;margin-left:4px;">👨 Pier</span></div>';
+          });
+        }
+      } else {
+        // 🟢 Common rest day
+        const wwPlan = getPlan('wanwan', day);
+        const prPlan = getPlan('pier', day);
+        bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">🟢 共同休息日 — 可安排两人活动</div>';
+        if (wwPlan || prPlan) {
+          bodyHtml += '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:6px;">📝 已有计划：</div>';
+          if (wwPlan) bodyHtml += '<div class="day-plan-existing" style="margin-bottom:6px;"><span style="color:#ff3b30;font-weight:600;">👩 弯弯：</span><br>' + wwPlan.replace(/\n/g,'<br>') + '</div>';
+          if (prPlan) bodyHtml += '<div class="day-plan-existing" style="margin-bottom:6px;"><span style="color:#007aff;font-weight:600;">👨 Pier：</span><br>' + prPlan.replace(/\n/g,'<br>') + '</div>';
+        }
+        bodyHtml += '<div style="font-size:12px;color:var(--text-secondary);margin:10px 0 4px;border-top:1px solid #e5e5ea;padding-top:8px;">添加共同计划：</div>';
+        bodyHtml += '<textarea class="day-plan-input" id="dayPlanText" placeholder="写下两人计划…例如：逛街、看电影、去西湖">' + (wwPlan || '') + '</textarea>';
+        bodyHtml += '<button class="day-plan-save" onclick="saveDayPlan(\'wanwan\','+day+');saveDayPlan(\'pier\','+day+');closeDayModal();buildRestCards(\'all\');">💾 保存到两人</button>';
+        if (wwPlan || prPlan) {
+          bodyHtml += '<button class="day-plan-delete" onclick="deleteDayPlan(\'wanwan\','+day+');deleteDayPlan(\'pier\','+day+');closeDayModal();buildRestCards(\'all\');">🗑 清除两人计划</button>';
+        }
       }
+    } else {
+      // ═══ Single person mode ═══
+      const p = taskData[person];
+      document.getElementById('dayModalTitle').innerHTML = p.emoji + ' ' + p.name + ' · 8月' + day + '日';
+      const busySet = new Set(p.busyDays.map(b => b.day));
 
-      bodyHtml += '<textarea class="day-plan-input" id="dayPlanText" placeholder="写下计划…例如：健身、陪弯弯逛街、看电影">' + existingPlan + '</textarea>';
-      bodyHtml += '<button class="day-plan-save" onclick="saveDayPlan(\''+person+'\','+day+')">💾 ' + (existingPlan ? '更新计划' : '保存计划') + '</button>';
-      if (existingPlan) {
-        bodyHtml += '<button class="day-plan-delete" onclick="deleteDayPlan(\''+person+'\','+day+')">🗑 删除计划</button>';
+      if (busySet.has(day) && day >= TODAY) {
+        const tasks = p.busyDays.filter(b => b.day === day);
+        bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">📋 当日任务：</div>';
+        tasks.forEach(t => {
+          bodyHtml += '<div class="day-task-item"><span class="task-type">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+'</div>';
+        });
+      } else if (busySet.has(day) && day < TODAY) {
+        const tasks = p.busyDays.filter(b => b.day === day);
+        bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">✅ 已完成：</div>';
+        tasks.forEach(t => {
+          bodyHtml += '<div class="day-task-item" style="background:#f2f2f7;color:var(--text-secondary);"><span class="task-type" style="background:#34c759">✓</span> '+t.project+'</div>';
+        });
+      } else {
+        const existingPlan = getPlan(person, day);
+        bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:8px;">🟢 休息日 — 你可以记录生活计划</div>';
+        if (existingPlan) {
+          bodyHtml += '<div class="day-plan-existing">📝 当前计划：<br>' + existingPlan.replace(/\n/g,'<br>') + '</div>';
+        }
+        bodyHtml += '<textarea class="day-plan-input" id="dayPlanText" placeholder="写下计划…例如：健身、陪弯弯逛街、看电影">' + existingPlan + '</textarea>';
+        bodyHtml += '<button class="day-plan-save" onclick="saveDayPlan(\''+person+'\','+day+')">💾 ' + (existingPlan ? '更新计划' : '保存计划') + '</button>';
+        if (existingPlan) {
+          bodyHtml += '<button class="day-plan-delete" onclick="deleteDayPlan(\''+person+'\','+day+')">🗑 删除计划</button>';
+        }
       }
     }
 
@@ -1682,13 +1842,8 @@
   function toggleFinance() {
     const el = document.getElementById('finance-detail');
     const label = document.querySelector('.finance-toggle .stat-label');
-    if (el.style.display === 'none') {
-      el.style.display = '';
-      label.textContent = '点击收起 ▲';
-    } else {
-      el.style.display = 'none';
-      label.textContent = '点击查看 ▼';
-    }
+    const isOpen = el.classList.toggle('open');
+    label.textContent = isOpen ? '点击收起 ▲' : '点击查看 ▼';
   }
 
   // Account filter
