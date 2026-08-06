@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pier先生 · 博主商务工作台</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="商务工作台">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1d1d1f">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg: #f5f5f7;
+    --card-bg: #ffffff;
+    --text: #1d1d1f;
+    --text-secondary: #86868b;
+    --accent: #ff3b30;
+    --accent2: #34c759;
+    --accent3: #007aff;
+    --accent4: #ff9500;
+    --border: #e5e5ea;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --radius: 16px;
+    --tab-height: 48px;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding-bottom: calc(var(--tab-height) + 16px);
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1d1d1f 0%, #3a3a3c 100%);
+    color: #fff;
+    padding: 20px 16px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header h1 { font-size:20px; font-weight:700; letter-spacing:-0.5px; }
+  .header .subtitle { font-size:13px; color:#aeaeb2; margin-top:4px; }
+  .header .accounts { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .account-badge {
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s, box-shadow 0.2s;
+    border: 2px solid transparent;
+  }
+  .account-badge:hover { transform: translateY(-1px); }
+  .account-badge:active { transform: scale(0.96); }
+  .account-badge.wanwan { background: #ff3b30; color:#fff; }
+  .account-badge.ziqing { background: #5856d6; color:#fff; }
+  .account-badge.pier { background: #007aff; color:#fff; }
+  .account-badge.all { background: #3a3a3c; color:#fff; border-color: #636366; }
+  .account-badge.active {
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+    transform: scale(1.05);
+  }
+
+  .stats-scroll {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .stats-scroll::-webkit-scrollbar { display: none; }
+  .stat-card {
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 10px 16px;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .stat-value { font-size:18px; font-weight:700; color:#ff3b30; }
+  .stat-label { font-size:11px; color:#aeaeb2; margin-top:2px; }
+  .finance-toggle {
+    cursor: pointer;
+    background: rgba(255,255,255,0.12) !important;
+    border: 1px dashed rgba(255,255,255,0.25);
+    transition: background 0.2s;
+  }
+  .finance-toggle:hover { background: rgba(255,255,255,0.2) !important; }
+  .finance-detail {
+    animation: slideDown 0.25s ease-out;
+  }
+  @keyframes slideDown {
+    from { opacity:0; transform: translateY(-8px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* Bottom Tab Navigation */
+  .tab-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--tab-height);
+    background: #fff;
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 200;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  }
+  .tab-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s;
+    border: none;
+    background: none;
+    padding: 4px 0;
+    gap: 2px;
+  }
+  .tab-btn .tab-icon { font-size: 18px; }
+  .tab-btn.active { color: var(--accent3); font-weight:600; }
+  .tab-btn:active { background: #f2f2f7; }
+
+  /* Sections */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 16px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .icon { font-size:18px; }
+
+  /* Project Cards */
+  .project-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .project-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0; height:4px;
+  }
+  .project-card.wanwan::before { background: #ff3b30; }
+  .project-card.ziqing::before { background: #5856d6; }
+  .project-card.pier::before { background: #007aff; }
+  .project-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+  .project-name { font-size:15px; font-weight:700; }
+  .project-account { font-size:11px; color:var(--text-secondary); }
+  .project-status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .status-shooting { background:#ff3b30; color:#fff; }
+  .status-script { background:#5856d6; color:#fff; }
+  .status-editing { background:#ff9500; color:#fff; }
+  .status-pending { background:#8e8e93; color:#fff; }
+  .status-published { background:#34c759; color:#fff; }
+
+  .finance-row { display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap; }
+  .finance-tag {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    background: #f2f2f7;
+    color: var(--text);
+  }
+  .finance-tag.highlight { background:#fff3f0; color:#ff3b30; font-weight:600; }
+  .finance-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 3px 10px;
+    background: #f2f2f7;
+    border-radius: 12px;
+    margin-bottom: 6px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .finance-toggle:active { opacity: 0.7; }
+  .finance-detail { display: none; }
+  .finance-detail.open { display: block; }
+
+  .timeline-row {
+    display: flex;
+    gap: 2px;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    flex-wrap: wrap;
+  }
+  .timeline-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .timeline-dot .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .timeline-dot .dot.done { background: #34c759; }
+  .timeline-dot .dot.current { background: #ff3b30; }
+  .timeline-dot .dot.future { background: #c7c7cc; }
+  .timeline-dot .dot.locked { background: #1d1d1f; }
+
+  .project-notes {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+
+  /* Financial Overview - mobile card format */
+  .finance-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .finance-card h3 { font-size:15px; font-weight:700; margin-bottom:12px; }
+  .finance-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .finance-item:last-child { border-bottom: none; }
+  .finance-item .fi-label { color: var(--text-secondary); font-size:13px; }
+  .finance-item .fi-value { font-weight:700; font-size:14px; }
+  .finance-item .fi-value.red { color:#ff3b30; }
+  .finance-item .fi-value.ziqing { color:#5856d6; }
+  .finance-item .fi-value.pier { color:#007aff; }
+  .finance-item .fi-status { font-size:12px; color:var(--text-secondary); }
+  .finance-item.total {
+    font-size: 16px;
+    font-weight: 700;
+    border-top: 2px solid var(--border);
+    border-bottom: none;
+    padding-top: 12px;
+  }
+
+  /* Debts */
+  .debt-item {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
+  }
+  .debt-item:last-child { border-bottom:none; }
+  .debt-amount { font-weight:700; color:#ff3b30; font-size:13px; }
+
+  /* Calendar - mobile list format */
+  .calendar-list {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+  }
+  .calendar-list h3 { font-size:15px; font-weight:700; margin-bottom:12px; }
+  .cal-day-group {
+    margin-bottom: 16px;
+  }
+  .cal-day-group:last-child { margin-bottom:0; }
+  .cal-date {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cal-date .weekday { font-size:12px; color:var(--text-secondary); }
+  .cal-date .today-badge { background:var(--accent3); color:#fff; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; }
+  .cal-events { display:flex; flex-direction:column; gap:4px; }
+  .cal-event {
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .cal-event.wanwan { background:#ffe5e5; color:#ff3b30; }
+  .cal-event.ziqing { background:#ece9f8; color:#5856d6; }
+  .cal-event.pier { background:#e3f2ff; color:#007aff; }
+  .cal-event .lock-icon { font-weight:700; }
+
+  .past-toggle {
+    text-align: center;
+    padding: 8px 0;
+    font-size: 12px;
+    color: #8e8e93;
+    cursor: pointer;
+    border-bottom: 1px dashed var(--border);
+    margin-bottom: 4px;
+    user-select: none;
+    transition: color 0.2s;
+  }
+  .past-toggle:hover { color: #007aff; }
+  .past-toggle.open { color: #007aff; }
+  .past-dates { transition: opacity 0.2s; }
+  .cal-filter-btn {
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+  }
+  .cal-filter-btn.wanwan { background:#ffe5e5; color:#ff3b30; }
+  .cal-filter-btn.ziqing { background:#ece9f8; color:#5856d6; }
+  .cal-filter-btn.pier { background:#e3f2ff; color:#007aff; }
+  .cal-filter-btn.all { background:#f2f2f7; color:#1d1d1f; }
+  .cal-filter-btn.active {
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.15);
+    transform: scale(1.08);
+    font-weight: 700;
+  }
+
+  }
+
+  /* Todo */
+  .todo-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px;
+  }
+  .todo-item {
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .todo-item:last-child { border-bottom:none; }
+  .todo-check {
+    width:24px; height:24px;
+    border-radius:8px;
+    border:2px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:all 0.2s;
+    flex-shrink:0;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .todo-check.done { background:#34c759; border-color:#34c759; color:#fff; font-size:14px; }
+  .todo-check:active { border-color:var(--accent3); }
+  .todo-content { flex:1; }
+  .todo-text { font-size:14px; }
+  .todo-text.done { color:var(--text-secondary); text-decoration:line-through; }
+  .todo-meta { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+  .todo-urgent { background:#ff3b30; color:#fff; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; }
+  .todo-normal { background:#ff9500; color:#fff; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:600; }
+
+  /* Desktop overrides */
+  @media (min-width: 768px) {
+    body { padding-bottom:0; }
+    .tab-nav { display:none; }
+    .header { padding:24px 32px; }
+    .header h1 { font-size:24px; }
+    .stats-scroll { overflow-x:visible; flex-wrap:wrap; }
+    .main { padding:24px 32px; }
+    .project-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+    .section { display: block; }
+    .finance-two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .finance-item .fi-label { font-size:14px; }
+    .finance-item .fi-value { font-size:14px; }
+    .project-card { padding:20px; }
+    .project-name { font-size:16px; }
+    .finance-tag { font-size:12px; }
+    .timeline-row { font-size:12px; }
+    .project-notes { font-size:12px; }
+  }
+
+  /* Desktop: show calendar in grid format */
+  @media (min-width: 768px) {
+    .calendar-list-mobile { display:none; }
+    .calendar-grid-desktop { display:block; }
+  }
+  @media (max-width: 767px) {
+    .calendar-list-mobile { display:block; }
+    .calendar-grid-desktop { display:none; }
+  }
+
+  /* Desktop calendar grid */
+  .calendar-grid {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+  }
+  .calendar-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .calendar-header h3 { font-size:16px; font-weight:700; }
+  .calendar-week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 8px;
+  }
+  .calendar-weekday {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    font-weight: 600;
+  }
+  .calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .calendar-day {
+    aspect-ratio: 1;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 12px;
+    position: relative;
+    min-height: 80px;
+    background: #fff;
+    border: 1px solid transparent;
+  }
+  .calendar-day:hover { border-color: var(--border); background: #f9f9fb; }
+  .calendar-day .day-num { font-weight:700; font-size:14px; margin-bottom:4px; }
+  .calendar-day.today { border-color: var(--accent3); background: #f0f7ff; }
+  .calendar-day .event {
+    font-size: 10px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin: 1px 0;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .event.wanwan { background:#ffe5e5; color:#ff3b30; }
+  .event.ziqing { background:#ece9f8; color:#5856d6; }
+  .event.pier { background:#e3f2ff; color:#007aff; }
+  .calendar-day.empty { background:transparent; }
+
+  /* Desktop finance table */
+  .finance-table { width:100%; border-collapse:collapse; }
+  .finance-table th {
+    text-align:left;
+    font-size:12px;
+    color:var(--text-secondary);
+    padding:8px 0;
+    border-bottom:2px solid var(--border);
+    font-weight:600;
+  }
+  .finance-table td {
+    padding:10px 0;
+    font-size:14px;
+    border-bottom:1px solid var(--border);
+  }
+  .finance-table .amount { font-weight:700; text-align:right; }
+  .finance-table .amount.red { color:#ff3b30; }
+  .finance-table .amount.green { color:#34c759; }
+  .finance-table .total-row td {
+    font-weight:700;
+    font-size:16px;
+    border-bottom:none;
+    padding-top:12px;
+  }
+
+  /* Mobile-only finance card items (hide on desktop) */
+  .finance-mobile { display:block; }
+  .finance-desktop { display:none; }
+  @media (min-width: 768px) {
+    .finance-mobile { display:none; }
+    .finance-desktop { display:block; }
+  }
+
+  /* Pull-down indicator */
+  .section-switch-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding: 8px;
+    display: none;
+  }
+  @media (max-width: 767px) {
+    .section-switch-hint { display:block; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>📋 Pier先生 · 博主商务工作台</h1>
+  <div class="subtitle">小红书美食博主商务 · 接单 · 分发 · 管账</div>
+  <div class="accounts">
+    <span class="account-badge all active" data-filter="all" onclick="filterProjects('all')">📋 全部</span>
+    <span class="account-badge wanwan" data-filter="wanwan" onclick="filterProjects('wanwan')">❤️ 弯弯的家</span>
+    <span class="account-badge ziqing" data-filter="ziqing" onclick="filterProjects('ziqing')">💜 Lynn子清</span>
+    <span class="account-badge pier" data-filter="pier" onclick="filterProjects('pier')">💙 Pier先生</span>
+  </div>
+  <div class="stats-scroll">
+    <div class="stat-card">
+      <div class="stat-value">8单</div>
+      <div class="stat-label">8月进行中</div>
+    </div>
+    <div class="stat-card finance-toggle" onclick="toggleFinance()">
+      <div class="stat-value" style="font-size:14px; color:#fff;">💰 财务概览</div>
+      <div class="stat-label" style="color:#aeaeb2;">点击查看 ▼</div>
+    </div>
+  </div>
+  <div id="finance-detail" class="finance-detail" style="display:none;">
+    <div class="stats-scroll" style="margin-top:8px;">
+      <div class="stat-card">
+        <div class="stat-value">¥9,400</div>
+        <div class="stat-label">弯弯预计净利</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">¥16,156</div>
+        <div class="stat-label">子清净利润</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">¥4,847</div>
+        <div class="stat-label">Pier到手(子清)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">¥4,200</div>
+        <div class="stat-label">已收结款</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Section 1: Projects -->
+  <div class="section" id="sec-projects">
+    <div class="section-title"><span class="icon">📌</span> 项目看板</div>
+    <div class="project-grid">
+
+      <!-- ⚡ 盒马梭子蟹 8/9 -->
+      <div class="project-card ziqing">
+        <div class="project-header">
+          <div>
+            <div class="project-name">盒马梭子蟹 · 花式吃蟹</div>
+            <div class="project-account">Lynn子清</div>
+          </div>
+          <span class="project-status-badge status-shooting">拍摄中</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥7,000</span>
+          <span class="finance-tag">返点 40% MCN</span>
+          <span class="finance-tag highlight">净利润 ¥3,570</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag" style="background:#ece9f8;color:#5856d6">子清 ¥2,499</span>
+          <span class="finance-tag" style="background:#e3f2ff;color:#007aff">Pier ¥1,071</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot done"></span>脚本8/4✅</span> →
+          <span class="timeline-dot"><span class="dot current"></span>拍摄8/5</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿8/7</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/9发布</span>
+        </div>
+        <div class="project-notes">三大卖点 · 产品报销300r内 · 授权二剪/分发 · 当天只发这单</div>
+      </div>
+
+      <!-- ⚡ 味事达 8/10 -->
+      <div class="project-card wanwan">
+        <div class="project-header">
+          <div>
+            <div class="project-name">味事达味极鲜 · 姜葱炒花蟹</div>
+            <div class="project-account">弯弯的家</div>
+          </div>
+          <span class="project-status-badge status-editing">拍摄完成</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥4,000</span>
+          <span class="finance-tag">返点 30%</span>
+          <span class="finance-tag highlight">共同净利 ¥2,400</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot done"></span>脚本✅</span> →
+          <span class="timeline-dot"><span class="dot done"></span>拍摄✅8/5</span> →
+          <span class="timeline-dot"><span class="dot current"></span>初稿8/7</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/10发布</span>
+        </div>
+        <div class="project-notes">⚠️清空竞品调料 · 倒蚝油用勺子/自装瓶 · 必说"味事达味极鲜" · 1瓶出镜不撕标签 · 倒酱油避瓶盖小孔 · 瓶颈套转正 · 花字黄色不挡产品</div>
+      </div>
+
+      <!-- ⚡ COLMO 8/12 -->
+      <div class="project-card pier">
+        <div class="project-header">
+          <div>
+            <div class="project-name">COLMO · 法式番茄牛尾骨</div>
+            <div class="project-account">Pier先生</div>
+          </div>
+          <span class="project-status-badge status-pending">进行中</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">独立运作</span>
+          <span class="finance-tag">脚本14镜/180s</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot future"></span>看菜8/5</span> →
+          <span class="timeline-dot"><span class="dot future"></span>脚本8/7</span> →
+          <span class="timeline-dot"><span class="dot future"></span>拍摄8/9</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿8/10</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/12发布</span>
+        </div>
+        <div class="project-notes">复刻《一饭封神2》节目菜 · 需体现COLMO微蒸烤箱功能 · 8/5第二期上线后选菜</div>
+      </div>
+
+      <!-- 西班牙橄榄油 8/17 -->
+      <div class="project-card ziqing">
+        <div class="project-header">
+          <div>
+            <div class="project-name">西班牙特级初榨橄榄油</div>
+            <div class="project-account">Lynn子清</div>
+          </div>
+          <span class="project-status-badge status-script">脚本待审</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥7,000</span>
+          <span class="finance-tag">返点 35% 待定</span>
+          <span class="finance-tag highlight">净利润 ¥3,920</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag" style="background:#ece9f8;color:#5856d6">子清 ¥2,744</span>
+          <span class="finance-tag" style="background:#e3f2ff;color:#007aff">Pier ¥1,176</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot current"></span>脚本8/5✅</span> →
+          <span class="timeline-dot"><span class="dot future"></span>拍摄8/12</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿8/14</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/17发布</span>
+        </div>
+        <div class="project-notes">禁意大利/禁物理冷榨/禁温度数字/禁欧盟酸度 · BGM轻音乐 · 开头尽快出产品</div>
+      </div>
+
+      <!-- 好侍咖喱 8/18 -->
+      <div class="project-card wanwan">
+        <div class="project-header">
+          <div>
+            <div class="project-name">好侍咖喱 · 唐扬炸鸡咖喱饭</div>
+            <div class="project-account">弯弯的家</div>
+          </div>
+          <span class="project-status-badge status-shooting">脚本完成</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥4,000</span>
+          <span class="finance-tag">返点 25%</span>
+          <span class="finance-tag highlight">共同净利 ¥2,600</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot done"></span>菜单✅</span> →
+          <span class="timeline-dot"><span class="dot done"></span>脚本8/6✅</span> →
+          <span class="timeline-dot"><span class="dot future"></span>拍摄8/11</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/18发布</span>
+        </div>
+        <div class="project-notes">一整盒4小块咖喱 · 食材：鸡腿肉、土豆、黄洋葱、西兰花 · 中通73719667766419</div>
+      </div>
+
+      <!-- Olé韩国食品节 8/24 -->
+      <div class="project-card ziqing">
+        <div class="project-header">
+          <div>
+            <div class="project-name">Olé韩国食品节</div>
+            <div class="project-account">Lynn子清</div>
+          </div>
+          <span class="project-status-badge status-pending">待拍摄</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥7,000</span>
+          <span class="finance-tag">返点 25%对私</span>
+          <span class="finance-tag highlight">净利润 ¥4,620</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag" style="background:#ece9f8;color:#5856d6">子清 ¥3,234</span>
+          <span class="finance-tag" style="background:#e3f2ff;color:#007aff">Pier ¥1,386</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot current"></span>脚本8/10</span> →
+          <span class="timeline-dot"><span class="dot future"></span>拍摄1❓</span> →
+          <span class="timeline-dot"><span class="dot future"></span>探店8/22</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿8/23</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/24发布</span>
+        </div>
+        <div class="project-notes">⚠️去两次Olé：先拍食材采购+做菜（子清定日期），8/22拍快闪。杭州恒隆Lifestyle门店·韩国食品节·部队锅/泡菜汤/拌饭·必带6个话题标签</div>
+      </div>
+
+      <!-- 柴火大院 8/28 -->
+      <div class="project-card wanwan">
+        <div class="project-header">
+          <div>
+            <div class="project-name">柴火大院 · 特等五常大米</div>
+            <div class="project-account">弯弯的家</div>
+          </div>
+          <span class="project-status-badge status-script">样品已寄</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥4,000</span>
+          <span class="finance-tag">返点 35%</span>
+          <span class="finance-tag highlight">共同净利 ¥2,200</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot done"></span>BF✅</span> →
+          <span class="timeline-dot"><span class="dot future"></span>大纲8/20</span> →
+          <span class="timeline-dot"><span class="dot future"></span>脚本8/24</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿8/26</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/28发布</span>
+        </div>
+        <div class="project-notes">📦单号773434097829015 · 产品露出≥20秒 · 必拍外袋/配料表/生米/蒸饭 · 话题#柴火大院特等五常大米</div>
+      </div>
+
+      <!-- ─────── 已发布 ─────── -->
+      <div id="published-divider" style="grid-column:1/-1; padding:8px 0; font-size:13px; color:var(--text-secondary); text-align:center; border-top:1px dashed var(--border); margin-top:12px;">
+        ✅ 已发布（仅供参考）
+      </div>
+
+      <!-- 康师傅拌面 已发布8/4 -->
+      <div class="project-card wanwan" style="opacity:0.65;">
+        <div class="project-header">
+          <div>
+            <div class="project-name">康师傅拌面 · Carbonara版</div>
+            <div class="project-account">弯弯的家</div>
+          </div>
+          <span class="project-status-badge status-published">✅ 已发布 8/4</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥4,000</span>
+          <span class="finance-tag">返点 35%</span>
+          <span class="finance-tag highlight">共同净利 ¥2,200</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot done"></span>拍摄7/30</span> →
+          <span class="timeline-dot"><span class="dot done"></span>初稿7/31</span> →
+          <span class="timeline-dot"><span class="dot done"></span>发布8/4</span>
+        </div>
+        <div class="project-notes">✅ 已发布 · 物料：无菌蛋×3、佩克里诺奶酪、帕玛森奶酪、馄饨、榨菜、蟹柳、溏心蛋</div>
+      </div>
+
+      <!-- 盒马菌菇季 已发布8/5 -->
+      <div class="project-card ziqing" style="opacity:0.65;">
+        <div class="project-header">
+          <div>
+            <div class="project-name">盒马菌菇季 · 一桌三菌</div>
+            <div class="project-account">Lynn子清</div>
+          </div>
+          <span class="project-status-badge status-published">✅已发布8/5</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">改价 ¥5,600</span>
+          <span class="finance-tag">返点 35%对私</span>
+          <span class="finance-tag highlight">净利润 ¥4,046</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag" style="background:#ece9f8;color:#5856d6">子清 ¥2,832</span>
+          <span class="finance-tag" style="background:#e3f2ff;color:#007aff">Pier ¥1,214</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot done"></span>脚本7/30</span> →
+          <span class="timeline-dot"><span class="dot done"></span>打卡8/1</span> →
+          <span class="timeline-dot"><span class="dot done"></span>初稿8/5✅</span> →
+          <span class="timeline-dot"><span class="dot done"></span>🔒发布8/5✅</span>
+        </div>
+        <div class="project-notes">必拍：牛肝菌/松茸/干巴菌选二 · 转塘盒马打卡 · 返点对私¥1,050</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 2: Finance -->
+  <div class="section" id="sec-finance">
+    <div class="section-title"><span class="icon">💰</span> 财务总览</div>
+
+    <!-- Mobile: card-based -->
+    <div class="finance-mobile">
+      <div class="finance-card">
+        <h3>❤️ 弯弯 · 共同净利</h3>
+        <div class="finance-item"><span class="fi-label">康师傅拌面</span><span class="fi-value red">¥2,200</span><span class="fi-status">已发布·待收</span></div>
+        <div class="finance-item"><span class="fi-label">味事达味极鲜</span><span class="fi-value red">¥2,400</span><span class="fi-status">拍摄完成</span></div>
+        <div class="finance-item"><span class="fi-label">好侍咖喱</span><span class="fi-value red">¥2,600</span><span class="fi-status">脚本完成</span></div>
+        <div class="finance-item"><span class="fi-label">柴火大院</span><span class="fi-value red">¥2,200</span><span class="fi-status">样品已寄</span></div>
+        <div class="finance-item total"><span>合计</span><span class="fi-value red">¥9,400</span></div>
+      </div>
+
+      <div class="finance-card">
+        <h3>💜 子清 · 七三分账</h3>
+        <div class="finance-item"><span class="fi-label">盒马菌菇季</span><span class="fi-value">¥4,046净</span><span class="fi-value ziqing">子清¥2,832</span><span class="fi-value pier">Pier¥1,214</span></div>
+        <div class="finance-item"><span class="fi-label">盒马梭子蟹</span><span class="fi-value">¥3,570净</span><span class="fi-value ziqing">子清¥2,499</span><span class="fi-value pier">Pier¥1,071</span></div>
+        <div class="finance-item"><span class="fi-label">西班牙橄榄油</span><span class="fi-value">¥3,920净</span><span class="fi-value ziqing">子清¥2,744</span><span class="fi-value pier">Pier¥1,176</span></div>
+        <div class="finance-item"><span class="fi-label">Olé韩国食品节</span><span class="fi-value">¥4,620净</span><span class="fi-value ziqing">子清¥3,234</span><span class="fi-value pier">Pier¥1,386</span></div>
+        <div class="finance-item total"><span>合计</span><span class="fi-value red">¥16,156</span><span class="fi-value ziqing">子清¥11,309</span><span class="fi-value pier">Pier¥4,847</span></div>
+      </div>
+
+      <div class="finance-card">
+        <h3>✅ 已收结款</h3>
+        <div class="finance-item"><span class="fi-label">子清·杨枝甘露</span><span class="fi-value">¥500</span><span class="fi-status">子清350/Pier150</span></div>
+        <div class="finance-item"><span class="fi-label">子清·泰式打抛饭</span><span class="fi-value">¥300</span><span class="fi-status">子清210/Pier90</span></div>
+        <div class="finance-item"><span class="fi-label">弯弯·两篇(加话题)</span><span class="fi-value">¥600</span><span class="fi-status">共同净利</span></div>
+        <div class="finance-item"><span class="fi-label">子清·野人玫瑰(水下)</span><span class="fi-value">¥2,500</span><span class="fi-status">子清1,750/Pier750</span></div>
+      </div>
+
+      <div class="finance-card">
+        <h3>⚠️ 待收/欠款</h3>
+        <div class="debt-item"><span>子清欠油烟机垫付</span><span class="debt-amount">¥5,260 未付</span></div>
+        <div class="debt-item"><span>内山窑报销</span><span class="debt-amount" style="color:#34c759">¥1,199 ✅已报</span></div>
+      </div>
+      <div class="finance-card">
+        <h3>🔴 义务待办</h3>
+        <div class="debt-item"><span>内山窑日常内容（锅赠送）</span><span class="debt-amount">8月内拍+发</span></div>
+      </div>
+    </div>
+
+    <!-- Desktop: table-based -->
+    <div class="finance-desktop">
+      <div class="finance-two-col">
+        <div class="finance-card">
+          <h3>弯弯 · 共同净利合计</h3>
+          <table class="finance-table">
+            <tr><th>项目</th><th>共同净利</th><th>状态</th></tr>
+            <tr><td>康师傅拌面</td><td class="amount red">¥2,200</td><td>已发布·待收</td></tr>
+            <tr><td>味事达味极鲜</td><td class="amount red">¥2,400</td><td>拍摄完成</td></tr>
+            <tr><td>好侍咖喱</td><td class="amount red">¥2,600</td><td>脚本完成</td></tr>
+            <tr><td>柴火大院</td><td class="amount red">¥2,200</td><td>样品已寄</td></tr>
+            <tr class="total-row"><td>合计</td><td class="amount red">¥9,400</td><td>—</td></tr>
+          </table>
+
+          <h3 style="margin-top:20px;">子清 · 分账明细</h3>
+          <table class="finance-table">
+            <tr><th>项目</th><th>净利润</th><th>子清到手</th><th>Pier到手</th></tr>
+            <tr><td>盒马菌菇季</td><td>¥4,046</td><td class="amount" style="color:#5856d6">¥2,832</td><td class="amount" style="color:#007aff">¥1,214</td></tr>
+            <tr><td>盒马梭子蟹</td><td>¥3,570</td><td class="amount" style="color:#5856d6">¥2,499</td><td class="amount" style="color:#007aff">¥1,071</td></tr>
+            <tr><td>西班牙橄榄油</td><td>¥3,920</td><td class="amount" style="color:#5856d6">¥2,744</td><td class="amount" style="color:#007aff">¥1,176</td></tr>
+            <tr><td>Olé韩国食品节</td><td>¥4,620</td><td class="amount" style="color:#5856d6">¥3,234</td><td class="amount" style="color:#007aff">¥1,386</td></tr>
+            <tr class="total-row"><td>合计</td><td class="amount red">¥16,156</td><td class="amount" style="color:#5856d6">¥11,309</td><td class="amount" style="color:#007aff">¥4,847</td></tr>
+          </table>
+
+          <h3 style="margin-top:20px;">已收结款 ✅</h3>
+          <table class="finance-table">
+            <tr><th>项目</th><th>金额</th><th>分账</th><th>状态</th></tr>
+            <tr><td>子清·杨枝甘露(加话题)</td><td>¥500</td><td>子清350/Pier150</td><td>✅已收</td></tr>
+            <tr><td>子清·泰式打抛饭(加话题)</td><td>¥300</td><td>子清210/Pier90</td><td>✅已收</td></tr>
+            <tr><td>弯弯·两篇(加话题)</td><td>¥600</td><td>共同净利</td><td>✅已收</td></tr>
+            <tr><td>子清·野人玫瑰(水下)</td><td>¥2,500</td><td>子清1,750/Pier750</td><td>✅已收</td></tr>
+          </table>
+
+          <h3 style="margin-top:20px;">⚠️ 待收/欠款</h3>
+          <div class="debt-list">
+            <div class="debt-item"><span>子清欠油烟机垫付（六点半品牌）</span><span class="debt-amount">¥5,260 未付</span></div>
+            <div class="debt-item"><span>内山窑报销（淘宝买锅）</span><span class="debt-amount" style="color:#34c759">¥1,199 ✅已报</span></div>
+          </div>
+
+          <h3 style="margin-top:20px;">🔴 义务待办</h3>
+          <div class="debt-list">
+            <div class="debt-item"><span>内山窑日常内容（锅赠送报答）</span><span class="debt-amount" style="color:#ff3b30">8月内拍+发</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Calendar -->
+  <div class="section" id="sec-calendar">
+    <div class="section-title"><span class="icon">📅</span> 8月排期</div>
+
+    <!-- Mobile: list format -->
+    <div class="calendar-list-mobile">
+      <div class="calendar-list">
+        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/6</span></h3>
+        <div class="cal-filter-bar" style="display:flex;gap:8px;font-size:11px;margin-bottom:12px;">
+          <span class="cal-filter-btn all active" data-filter="all" onclick="filterCalendar('all')">全部</span>
+          <span class="cal-filter-btn wanwan" data-filter="wanwan" onclick="filterCalendar('wanwan')">弯弯</span>
+          <span class="cal-filter-btn ziqing" data-filter="ziqing" onclick="filterCalendar('ziqing')">子清</span>
+          <span class="cal-filter-btn pier" data-filter="pier" onclick="filterCalendar('pier')">Pier</span>
+        </div>
+
+        <!-- ── 过去可折叠 ── -->
+        <div class="past-toggle" id="pastToggle" onclick="togglePastDates()">
+          <span id="pastToggleIcon">▶</span> 过去的日程（7/30 — 8/5）
+        </div>
+        <div class="past-dates" id="pastDates" style="display:none">
+        <div class="cal-day-group">
+          <div class="cal-date">7/30 周四</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">康师傅拍摄</div>
+            <div class="cal-event ziqing">菌菇脚本✅</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">7/31 周五</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">康师傅初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/1 周六</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">菌菇打卡 ✅</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/3 周一</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">好侍大纲</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/4 周二</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">康师傅发布 ✅</div>
+            <div class="cal-event ziqing">梭子蟹脚本</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/5 周三</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">味事达拍摄✅</div>
+            <div class="cal-event ziqing">菌菇发布✅</div>
+            <div class="cal-event ziqing">橄榄油脚本✅待审</div>
+            <div class="cal-event ziqing">梭子蟹拍摄</div>
+            <div class="cal-event pier">COLMO看菜</div>
+          </div>
+        </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/6 周四 <span class="today-badge">今天</span></div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">好侍脚本 ✅</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/7 周五</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">味事达初稿</div>
+            <div class="cal-event pier">COLMO脚本</div>
+            <div class="cal-event ziqing">梭子蟹初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/8 周六</div>
+          <div class="cal-events">
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/9 周日</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">梭子蟹发布 <span class="lock-icon">🔒</span></div>
+            <div class="cal-event pier">COLMO拍摄</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/10 周一</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">味事达发布 <span class="lock-icon">🔒</span></div>
+            <div class="cal-event pier">COLMO初稿</div>
+            <div class="cal-event ziqing">Olé脚本</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/11 周二</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">好侍拍摄</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/12 周三</div>
+          <div class="cal-events">
+            <div class="cal-event pier">COLMO发布 <span class="lock-icon">🔒</span></div>
+            <div class="cal-event ziqing">橄榄油拍摄</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/14 周五</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">橄榄油初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/15 周六</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">好侍初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/17 周一</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">橄榄油发布 <span class="lock-icon">🔒</span></div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/18 周二</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">好侍发布 <span class="lock-icon">🔒</span></div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/20 周四</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">柴火大院大纲</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/22 周六</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">Olé探店</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/23 周日</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">Olé初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/24 周一</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">柴火大院脚本</div>
+            <div class="cal-event ziqing">Olé发布 <span class="lock-icon">🔒</span></div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/26 周三</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">柴火大院初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/28 周五</div>
+          <div class="cal-events">
+            <div class="cal-event wanwan">柴火大院发布 <span class="lock-icon">🔒</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop: grid format -->
+    <div class="calendar-grid-desktop">
+      <div class="calendar-grid">
+        <div class="calendar-header">
+          <h3>2026年8月</h3>
+          <div class="cal-filter-bar" style="display:flex;gap:8px;font-size:11px;">
+            <span class="cal-filter-btn all active" data-filter="all" onclick="filterCalendar('all')">全部</span>
+            <span class="cal-filter-btn wanwan" data-filter="wanwan" onclick="filterCalendar('wanwan')">弯弯</span>
+            <span class="cal-filter-btn ziqing" data-filter="ziqing" onclick="filterCalendar('ziqing')">子清</span>
+            <span class="cal-filter-btn pier" data-filter="pier" onclick="filterCalendar('pier')">Pier</span>
+          </div>
+        </div>
+        <div class="calendar-week">
+          <div class="calendar-weekday">一</div>
+          <div class="calendar-weekday">二</div>
+          <div class="calendar-weekday">三</div>
+          <div class="calendar-weekday">四</div>
+          <div class="calendar-weekday">五</div>
+          <div class="calendar-weekday">六</div>
+          <div class="calendar-weekday">日</div>
+        </div>
+        <div class="calendar-days">
+          <div class="calendar-day empty"><span class="day-num" style="color:#c7c7cc">27</span></div>
+          <div class="calendar-day empty"><span class="day-num" style="color:#c7c7cc">28</span></div>
+          <div class="calendar-day empty"><span class="day-num" style="color:#c7c7cc">29</span></div>
+          <div class="calendar-day"><span class="day-num">30</span><div class="event wanwan">康师傅拍摄</div><div class="event ziqing">菌菇脚本</div></div>
+          <div class="calendar-day"><span class="day-num">31</span><div class="event wanwan">康师傅初稿</div></div>
+          <div class="calendar-day"><span class="day-num">1</span><div class="event ziqing">菌菇打卡✅</div></div>
+          <div class="calendar-day"><span class="day-num">2</span></div>
+          <div class="calendar-day"><span class="day-num">3</span><div class="event wanwan">好侍大纲</div></div>
+          <div class="calendar-day"><span class="day-num">4</span><div class="event wanwan">康师傅发布✅</div><div class="event ziqing">梭子蟹脚本</div></div>
+          <div class="calendar-day"><span class="day-num">5</span><div class="event wanwan">味事达拍摄✅</div><div class="event ziqing">菌菇发布✅</div><div class="event ziqing">橄榄油脚本✅</div><div class="event ziqing">梭子蟹拍摄</div><div class="event pier">COLMO看菜</div></div>
+          <div class="calendar-day today"><span class="day-num">6</span><div class="event wanwan">好侍脚本✅</div></div>
+          <div class="calendar-day"><span class="day-num">7</span><div class="event wanwan">味事达初稿</div><div class="event pier">COLMO脚本</div><div class="event ziqing">梭子蟹初稿</div></div>
+          <div class="calendar-day"><span class="day-num">8</span></div>
+          <div class="calendar-day"><span class="day-num">9</span><div class="event ziqing">梭子蟹发布🔒</div><div class="event pier">COLMO拍摄</div></div>
+          <div class="calendar-day"><span class="day-num">10</span><div class="event wanwan">味事达发布🔒</div><div class="event pier">COLMO初稿</div><div class="event ziqing">Olé脚本</div></div>
+          <div class="calendar-day"><span class="day-num">11</span><div class="event wanwan">好侍拍摄</div></div>
+          <div class="calendar-day"><span class="day-num">12</span><div class="event pier">COLMO发布🔒</div><div class="event ziqing">橄榄油拍摄</div></div>
+          <div class="calendar-day"><span class="day-num">13</span></div>
+          <div class="calendar-day"><span class="day-num">14</span><div class="event ziqing">橄榄油初稿</div></div>
+          <div class="calendar-day"><span class="day-num">15</span><div class="event wanwan">好侍初稿</div></div>
+          <div class="calendar-day"><span class="day-num">16</span></div>
+          <div class="calendar-day"><span class="day-num">17</span><div class="event ziqing">橄榄油发布🔒</div></div>
+          <div class="calendar-day"><span class="day-num">18</span><div class="event wanwan">好侍发布🔒</div></div>
+          <div class="calendar-day"><span class="day-num">19</span></div>
+          <div class="calendar-day"><span class="day-num">20</span><div class="event wanwan">柴火大院大纲</div></div>
+          <div class="calendar-day"><span class="day-num">21</span></div>
+          <div class="calendar-day"><span class="day-num">22</span><div class="event ziqing">Olé探店</div></div>
+          <div class="calendar-day"><span class="day-num">23</span><div class="event ziqing">Olé初稿</div></div>
+          <div class="calendar-day"><span class="day-num">24</span><div class="event wanwan">柴火大院脚本</div><div class="event ziqing">Olé发布🔒</div></div>
+          <div class="calendar-day"><span class="day-num">25</span></div>
+          <div class="calendar-day"><span class="day-num">26</span><div class="event wanwan">柴火大院初稿</div></div>
+          <div class="calendar-day"><span class="day-num">27</span></div>
+          <div class="calendar-day"><span class="day-num">28</span><div class="event wanwan">柴火大院发布🔒</div></div>
+          <div class="calendar-day"><span class="day-num">29</span></div>
+          <div class="calendar-day"><span class="day-num">30</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Todo -->
+  <div class="section" id="sec-todo">
+    <div class="section-title"><span class="icon">🔥</span> 待办提醒</div>
+    <div class="todo-card">
+      <div class="todo-item">
+        <div class="todo-check done" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text done">弯弯·康师傅已发布 ✅</div>
+          <div class="todo-meta"><span class="todo-urgent">✅完成</span> 8/4发布</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check done" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text done">子清·盒马菌菇门店打卡 ✅</div>
+          <div class="todo-meta"><span class="todo-urgent">✅完成</span> 8/1已打卡</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check done" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text done">内山窑报销 ¥1,199 ✅</div>
+          <div class="todo-meta"><span class="todo-urgent">✅完成</span> 已到账</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text">🔴 内山窑日常内容（锅赠送答谢）</div>
+          <div class="todo-meta"><span class="todo-urgent">8月内</span> 需拍摄+发布一篇日常</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text">西班牙橄榄油脚本已出，等PR反馈</div>
+          <div class="todo-meta"><span class="todo-normal">🟡等待</span> 脚本已完成</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text">好侍咖喱脚本完成，等拍摄</div>
+          <div class="todo-meta"><span class="todo-normal">🟡等待</span> 拍摄8/11</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text">Olé第一次探店时间待子清确认❓</div>
+          <div class="todo-meta"><span class="todo-urgent">⚠️急</span> 脚本8/10 探店8/22</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text">子清欠油烟机垫付 ¥5,260</div>
+          <div class="todo-meta"><span class="todo-normal">🟡欠款</span> 六点半品牌烟灶</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- Bottom Tab Navigation -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('projects')" id="tab-projects">
+    <span class="tab-icon">📌</span>
+    <span>看板</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('finance')" id="tab-finance">
+    <span class="tab-icon">💰</span>
+    <span>财务</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('calendar')" id="tab-calendar">
+    <span class="tab-icon">📅</span>
+    <span>排期</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('todo')" id="tab-todo">
+    <span class="tab-icon">🔥</span>
+    <span>待办</span>
+  </button>
+</div>
+
+<script>
+  // Tab switching
+  function switchTab(name) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+    document.getElementById('sec-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  // Mobile check - show all sections on desktop, first tab on mobile
+  function initTabs() {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      document.getElementById('sec-projects').classList.add('active');
+    } else {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('active'));
+    }
+  }
+
+  window.addEventListener('resize', initTabs);
+  initTabs();
+
+  // Calendar filter
+  function filterCalendar(account) {
+    document.querySelectorAll('.cal-filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cal-filter-btn[data-filter="' + account + '"]').forEach(b => b.classList.add('active'));
+
+    // Mobile list: filter events within each day group
+    document.querySelectorAll('.calendar-list .cal-day-group').forEach(group => {
+      const events = group.querySelectorAll('.cal-event');
+      let visible = 0;
+      events.forEach(ev => {
+        if (account === 'all' || ev.classList.contains(account)) {
+          ev.style.display = '';
+          visible++;
+        } else {
+          ev.style.display = 'none';
+        }
+      });
+      group.style.display = visible > 0 ? '' : 'none';
+    });
+
+    // Desktop grid: filter events within each day cell
+    document.querySelectorAll('.calendar-grid .calendar-day').forEach(cell => {
+      const events = cell.querySelectorAll('.event');
+      let visible = 0;
+      events.forEach(ev => {
+        if (account === 'all' || ev.classList.contains(account)) {
+          ev.style.display = '';
+          visible++;
+        } else {
+          ev.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // Past dates toggle
+  function togglePastDates() {
+    const el = document.getElementById('pastDates');
+    const btn = document.getElementById('pastToggle');
+    const icon = document.getElementById('pastToggleIcon');
+    if (el.style.display === 'none') {
+      el.style.display = '';
+      icon.textContent = '▼';
+      btn.classList.add('open');
+      // reset any hidden groups from filter
+      el.querySelectorAll('.cal-day-group').forEach(g => g.style.display = '');
+      el.querySelectorAll('.cal-event').forEach(e => e.style.display = '');
+    } else {
+      el.style.display = 'none';
+      icon.textContent = '▶';
+      btn.classList.remove('open');
+    }
+  }
+  function toggleFinance() {
+    const el = document.getElementById('finance-detail');
+    const label = document.querySelector('.finance-toggle .stat-label');
+    if (el.style.display === 'none') {
+      el.style.display = '';
+      label.textContent = '点击收起 ▲';
+    } else {
+      el.style.display = 'none';
+      label.textContent = '点击查看 ▼';
+    }
+  }
+
+  // Account filter
+  function filterProjects(account) {
+    document.querySelectorAll('.account-badge').forEach(b => b.classList.remove('active'));
+    document.querySelector('.account-badge[data-filter="' + account + '"]').classList.add('active');
+
+    const cards = document.querySelectorAll('.project-card');
+    const divider = document.getElementById('published-divider');
+    let anyVisible = false;
+
+    cards.forEach(card => {
+      if (account === 'all' || card.classList.contains(account)) {
+        card.style.display = '';
+        anyVisible = true;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    if (divider) {
+      divider.style.display = (account === 'all' || anyVisible) ? '' : 'none';
+    }
+  }
+
+  // Todo toggle
+  function toggleTodo(el) {
+    el.classList.toggle('done');
+    const textEl = el.parentElement.querySelector('.todo-text');
+    if (el.classList.contains('done')) {
+      textEl.classList.add('done');
+    } else {
+      textEl.classList.remove('done');
+    }
+  }
+
+  // Auto-collapse finance rows in project cards
+  document.querySelectorAll('.project-card').forEach(card => {
+    const rows = card.querySelectorAll('.finance-row');
+    if (rows.length === 0) return;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'finance-detail';
+    rows.forEach(row => wrapper.appendChild(row));
+    const toggle = document.createElement('div');
+    toggle.className = 'finance-toggle';
+    toggle.innerHTML = '💰 财务 ▼';
+    toggle.onclick = function() {
+      const isOpen = wrapper.classList.toggle('open');
+      this.innerHTML = isOpen ? '💰 财务 ▲' : '💰 财务 ▼';
+    };
+    const header = card.querySelector('.project-header');
+    if (header) header.after(toggle);
+    toggle.after(wrapper);
+  });
+
+  // PWA Service Worker registration
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      console.log('SW registered:', reg.scope);
+    }).catch(err => {
+      console.log('SW registration failed:', err);
+    });
+  }
+</script>
+
+</body>
+</html>
