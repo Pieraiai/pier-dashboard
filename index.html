@@ -679,9 +679,15 @@
   </div>
   <div id="finance-detail" class="finance-detail">
     <div class="stats-scroll" style="margin-top:8px;">
-      <div class="stat-card">
-        <div class="stat-value">¥9,400</div>
-        <div class="stat-label">弯弯预计净利</div>
+      <div class="stat-card" style="grid-column:1/-1;background:#2c2c2e;text-align:left;padding:12px 16px;">
+        <div class="stat-label" style="margin-bottom:8px;font-size:13px;color:#ff3b30;">❤️ 弯弯各单 · 对半分（已扣食材+剪辑）</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:13px;">
+          <span style="background:#3a3a3c;padding:4px 10px;border-radius:6px;">康师傅拌面 <b style="color:#ff3b30">¥2,150</b> → 各¥1,075 <span style="color:#888;font-size:11px">(自剪)</span></span>
+          <span style="background:#3a3a3c;padding:4px 10px;border-radius:6px;">味事达味极鲜 <b style="color:#ff3b30">¥2,332.5</b> → 各¥1,166.3</span>
+          <span style="background:#3a3a3c;padding:4px 10px;border-radius:6px;">好侍咖喱 <b style="color:#ff3b30">¥2,532.5</b> → 各¥1,266.3</span>
+          <span style="background:#3a3a3c;padding:4px 10px;border-radius:6px;">柴火大院 <b style="color:#ff3b30">¥2,132.5</b> → 各¥1,066.3</span>
+          <span style="background:#ff3b30;padding:4px 10px;border-radius:6px;color:#fff;">合计 ¥9,147.5 → 各<b>¥4,573.8</b></span>
+        </div>
       </div>
       <div class="stat-card">
         <div class="stat-value">¥16,156</div>
@@ -742,11 +748,11 @@
         </div>
         <div class="timeline-row">
           <span class="timeline-dot"><span class="dot done"></span>脚本8/4✅</span> →
-          <span class="timeline-dot"><span class="dot current"></span>拍摄8/5</span> →
-          <span class="timeline-dot"><span class="dot future"></span>初稿8/7</span> →
+          <span class="timeline-dot"><span class="dot current"></span>拍摄8/7</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿8/8</span> →
           <span class="timeline-dot"><span class="dot locked"></span>🔒8/9发布</span>
         </div>
-        <div class="project-notes">三大卖点 · 产品报销300r内 · 授权二剪/分发 · 当天只发这单</div>
+        <div class="project-notes">三大卖点 · 产品报销300r内 · 授权二剪/分发 · 当天只发这单 · ⚠️门店蟹品质差，今晚重新采购</div>
       </div>
 
       <!-- ⚡ 味事达 8/10 -->
@@ -961,12 +967,12 @@
     <!-- Mobile: card-based -->
     <div class="finance-mobile">
       <div class="finance-card">
-        <h3>❤️ 弯弯 · 共同净利</h3>
-        <div class="finance-item"><span class="fi-label">康师傅拌面</span><span class="fi-value red">¥2,200</span><span class="fi-status">已发布·待收</span></div>
-        <div class="finance-item"><span class="fi-label">味事达味极鲜</span><span class="fi-value red">¥2,400</span><span class="fi-status">拍摄完成</span></div>
-        <div class="finance-item"><span class="fi-label">好侍咖喱</span><span class="fi-value red">¥2,600</span><span class="fi-status">脚本完成</span></div>
-        <div class="finance-item"><span class="fi-label">柴火大院</span><span class="fi-value red">¥2,200</span><span class="fi-status">样品已寄</span></div>
-        <div class="finance-item total"><span>合计</span><span class="fi-value red">¥9,400</span></div>
+        <h3>❤️ 弯弯 · 对半分（已扣食材¥50+剪辑¥17.5）</h3>
+        <div class="finance-item"><span class="fi-label">康师傅拌面</span><span class="fi-value red">¥2,150</span><span class="fi-value">各¥1,075</span><span class="fi-status" style="color:#888">自剪·待收</span></div>
+        <div class="finance-item"><span class="fi-label">味事达味极鲜</span><span class="fi-value red">¥2,332.5</span><span class="fi-value">各¥1,166.3</span><span class="fi-status">拍摄完成</span></div>
+        <div class="finance-item"><span class="fi-label">好侍咖喱</span><span class="fi-value red">¥2,532.5</span><span class="fi-value">各¥1,266.3</span><span class="fi-status">脚本完成</span></div>
+        <div class="finance-item"><span class="fi-label">柴火大院</span><span class="fi-value red">¥2,132.5</span><span class="fi-value">各¥1,066.3</span><span class="fi-status">样品已寄</span></div>
+        <div class="finance-item total"><span>合计</span><span class="fi-value red">¥9,147.5</span><span class="fi-value">各¥4,573.8</span></div>
       </div>
 
       <div class="finance-card">
@@ -1001,14 +1007,14 @@
     <div class="finance-desktop">
       <div class="finance-two-col">
         <div class="finance-card">
-          <h3>弯弯 · 共同净利合计</h3>
+          <h3>弯弯 · 对半分（已扣食材¥50+剪辑¥17.5）</h3>
           <table class="finance-table">
-            <tr><th>项目</th><th>共同净利</th><th>状态</th></tr>
-            <tr><td>康师傅拌面</td><td class="amount red">¥2,200</td><td>已发布·待收</td></tr>
-            <tr><td>味事达味极鲜</td><td class="amount red">¥2,400</td><td>拍摄完成</td></tr>
-            <tr><td>好侍咖喱</td><td class="amount red">¥2,600</td><td>脚本完成</td></tr>
-            <tr><td>柴火大院</td><td class="amount red">¥2,200</td><td>样品已寄</td></tr>
-            <tr class="total-row"><td>合计</td><td class="amount red">¥9,400</td><td>—</td></tr>
+            <tr><th>项目</th><th>共同净利</th><th>Pier到手</th><th>弯弯到手</th><th>状态</th></tr>
+            <tr><td>康师傅拌面</td><td class="amount red">¥2,150</td><td class="amount">¥1,075</td><td class="amount">¥1,075</td><td>自剪·待收</td></tr>
+            <tr><td>味事达味极鲜</td><td class="amount red">¥2,332.5</td><td class="amount">¥1,166.3</td><td class="amount">¥1,166.3</td><td>拍摄完成</td></tr>
+            <tr><td>好侍咖喱</td><td class="amount red">¥2,532.5</td><td class="amount">¥1,266.3</td><td class="amount">¥1,266.3</td><td>脚本完成</td></tr>
+            <tr><td>柴火大院</td><td class="amount red">¥2,132.5</td><td class="amount">¥1,066.3</td><td class="amount">¥1,066.3</td><td>样品已寄</td></tr>
+            <tr class="total-row"><td>合计</td><td class="amount red">¥9,147.5</td><td class="amount">¥4,573.8</td><td class="amount">¥4,573.8</td><td>—</td></tr>
           </table>
 
           <h3 style="margin-top:20px;">子清 · 分账明细</h3>
@@ -1052,7 +1058,7 @@
     <!-- Mobile: list format -->
     <div class="calendar-list-mobile">
       <div class="calendar-list">
-        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/6</span></h3>
+        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/7</span></h3>
         <div class="cal-filter-bar" style="display:flex;gap:8px;font-size:11px;margin-bottom:12px;">
           <span class="cal-filter-btn all active" data-filter="all" onclick="filterCalendar('all')">全部</span>
           <span class="cal-filter-btn wanwan" data-filter="wanwan" onclick="filterCalendar('wanwan')">弯弯</span>
@@ -1108,32 +1114,31 @@
             <div class="cal-event wanwan">味事达拍摄✅</div>
             <div class="cal-event ziqing">菌菇发布✅</div>
             <div class="cal-event ziqing">橄榄油脚本✅待审</div>
-            <div class="cal-event ziqing">梭子蟹拍摄</div>
             <div class="cal-event pier">COLMO看菜</div>
           </div>
         </div>
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/6 周四 <span class="today-badge">今天</span></div>
+          <div class="cal-date">8/6 周四</div>
           <div class="cal-events">
             <div class="cal-event wanwan">好侍脚本 ✅</div>
           </div>
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/7 周五</div>
+          <div class="cal-date">8/7 周五 <span class="today-badge">今天</span></div>
           <div class="cal-events">
             <div class="cal-event wanwan">味事达初稿</div>
             <div class="cal-event pier">COLMO脚本</div>
-            <div class="cal-event ziqing">梭子蟹初稿</div>
+            <div class="cal-event ziqing">梭子蟹拍摄</div>
           </div>
         </div>
 
         <div class="cal-day-group">
           <div class="cal-date">8/8 周六</div>
           <div class="cal-events">
-          </div>
+            <div class="cal-event ziqing">梭子蟹初稿</div>
         </div>
 
         <div class="cal-day-group">
@@ -1272,10 +1277,10 @@
           <div class="calendar-day"><span class="day-num">2</span></div>
           <div class="calendar-day"><span class="day-num">3</span><div class="event wanwan">好侍大纲</div></div>
           <div class="calendar-day"><span class="day-num">4</span><div class="event wanwan">康师傅发布✅</div><div class="event ziqing">梭子蟹脚本</div></div>
-          <div class="calendar-day"><span class="day-num">5</span><div class="event wanwan">味事达拍摄✅</div><div class="event ziqing">菌菇发布✅</div><div class="event ziqing">橄榄油脚本✅</div><div class="event ziqing">梭子蟹拍摄</div><div class="event pier">COLMO看菜</div></div>
-          <div class="calendar-day today"><span class="day-num">6</span><div class="event wanwan">好侍脚本✅</div></div>
-          <div class="calendar-day"><span class="day-num">7</span><div class="event wanwan">味事达初稿</div><div class="event pier">COLMO脚本</div><div class="event ziqing">梭子蟹初稿</div></div>
-          <div class="calendar-day"><span class="day-num">8</span></div>
+          <div class="calendar-day"><span class="day-num">5</span><div class="event wanwan">味事达拍摄✅</div><div class="event ziqing">菌菇发布✅</div><div class="event ziqing">橄榄油脚本✅</div><div class="event pier">COLMO看菜</div></div>
+          <div class="calendar-day"><span class="day-num">6</span><div class="event wanwan">好侍脚本✅</div></div>
+          <div class="calendar-day today"><span class="day-num">7</span><div class="event wanwan">味事达初稿</div><div class="event pier">COLMO脚本</div><div class="event ziqing">梭子蟹拍摄</div></div>
+          <div class="calendar-day"><span class="day-num">8</span><div class="event ziqing">梭子蟹初稿</div></div>
           <div class="calendar-day"><span class="day-num">9</span><div class="event ziqing">梭子蟹发布🔒</div><div class="event pier">COLMO拍摄</div></div>
           <div class="calendar-day"><span class="day-num">10</span><div class="event wanwan">味事达发布🔒</div><div class="event pier">COLMO初稿</div><div class="event ziqing">Olé脚本</div></div>
           <div class="calendar-day"><span class="day-num">11</span><div class="event wanwan">好侍拍摄</div></div>
@@ -1431,7 +1436,7 @@
   initTabs();
 
   // ═══════════ 休息日分析引擎 ═══════════
-  const TODAY = 6; // 8月6日
+  const TODAY = 7; // 8月7日
 
   // 任务定义：{ day, type, project }
   // type: 'outline'=大纲/看菜, 'script'=脚本, 'shoot'=拍摄, 'draft'=初稿, 'visit'=探店
@@ -1451,14 +1456,15 @@
     ziqing: {
       name: 'Lynn子清', emoji: '💜', cls: 'ziqing',
       busyDays: [
-        {day:7, type:'draft', project:'梭子蟹初稿'},
+        {day:7, type:'shoot', project:'梭子蟹拍摄'},
+        {day:8, type:'draft', project:'梭子蟹初稿'},
         {day:10, type:'script', project:'Olé脚本'},
         {day:12, type:'shoot', project:'橄榄油拍摄'},
         {day:14, type:'draft', project:'橄榄油初稿'},
         {day:22, type:'visit', project:'Olé探店'},
         {day:23, type:'draft', project:'Olé初稿'},
       ],
-      suggestion: '💡 梭子蟹初稿(8/7)+Olé脚本(8/10)间隔很近，<br>建议<strong>8/7一次搞定两个稿</strong>，<br>8/8-8/9 就连休2天。橄榄油拍摄前有5天空闲。'
+      suggestion: '💡 梭子蟹拍摄(8/7)→初稿(8/8)→发布(8/9)连轴3天，<br>今晚提前备好蟹和食材，明天直接开拍烹饪。'
     },
     pier: {
       name: 'Pier先生', emoji: '💙', cls: 'pier',
