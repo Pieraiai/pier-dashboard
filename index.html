@@ -884,10 +884,10 @@
       <div class="project-card ziqing">
         <div class="project-header">
           <div>
-            <div class="project-name">内山窑 · 砂锅</div>
+            <div class="project-name">内山窑 · 砂锅胡椒鸡</div>
             <div class="project-account">Lynn子清</div>
           </div>
-          <span class="project-status-badge status-pending">已接单</span>
+          <span class="project-status-badge status-script">已下单·脚本中</span>
         </div>
         <div class="finance-row">
           <span class="finance-tag">改价 ¥5,600</span>
@@ -900,8 +900,8 @@
         </div>
         <div class="timeline-row">
           <span class="timeline-dot"><span class="dot done"></span>下单8/10✅</span> →
-          <span class="timeline-dot"><span class="dot future"></span>菜品8/11</span> →
-          <span class="timeline-dot"><span class="dot future"></span>脚本8/12</span> →
+          <span class="timeline-dot"><span class="dot done"></span>菜品8/11✅</span> →
+          <span class="timeline-dot"><span class="dot current"></span>脚本8/12</span> →
           <span class="timeline-dot"><span class="dot future"></span>拍摄8/14</span> →
           <span class="timeline-dot"><span class="dot future"></span>初稿8/16</span> →
           <span class="timeline-dot"><span class="dot locked"></span>🔒8/18发布</span>
@@ -1090,7 +1090,7 @@
     <!-- Mobile: list format -->
     <div class="calendar-list-mobile">
       <div class="calendar-list">
-        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/10</span></h3>
+        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/11</span></h3>
         <div class="cal-filter-bar" style="display:flex;gap:8px;font-size:11px;margin-bottom:12px;">
           <span class="cal-filter-btn all active" data-filter="all" onclick="filterCalendar('all')">全部</span>
           <span class="cal-filter-btn wanwan" data-filter="wanwan" onclick="filterCalendar('wanwan')">弯弯</span>
@@ -1180,7 +1180,7 @@
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/10 周一 <span class="today-badge">今天</span></div>
+          <div class="cal-date">8/10 周一</div>
           <div class="cal-events">
             <div class="cal-event wanwan">味事达发布 <span class="lock-icon">🔒</span></div>
             <div class="cal-event wanwan">好侍拍摄</div>
@@ -1189,10 +1189,10 @@
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/11 周二</div>
+          <div class="cal-date">8/11 周二 <span class="today-badge">今天</span></div>
           <div class="cal-events">
             <div class="cal-event wanwan">好侍拍摄</div>
-            <div class="cal-event ziqing">内山窑砂锅菜品</div>
+            <div class="cal-event ziqing">内山窑砂锅菜品✅</div>
           </div>
         </div>
 
@@ -1332,8 +1332,8 @@
           <div class="calendar-day"><span class="day-num">7</span><div class="event ziqing">梭子蟹拍摄✅</div></div>
           <div class="calendar-day"><span class="day-num">8</span><div class="event wanwan">味事达初稿 ✅</div></div>
           <div class="calendar-day"><span class="day-num">9</span><div class="event ziqing">梭子蟹初稿✅</div></div>
-          <div class="calendar-day today"><span class="day-num">10</span><div class="event wanwan">味事达发布🔒</div><div class="event ziqing">Olé脚本</div></div>
-          <div class="calendar-day"><span class="day-num">11</span><div class="event wanwan">好侍拍摄✅</div><div class="event ziqing">内山窑砂锅菜品</div></div>
+          <div class="calendar-day"><span class="day-num">10</span><div class="event wanwan">味事达发布🔒</div><div class="event ziqing">Olé脚本</div></div>
+          <div class="calendar-day today"><span class="day-num">11</span><div class="event wanwan">好侍拍摄✅</div><div class="event ziqing">内山窑砂锅菜品✅</div></div>
           <div class="calendar-day"><span class="day-num">12</span><div class="event ziqing">内山窑砂锅脚本</div><div class="event ziqing">橄榄油拍摄</div></div>
           <div class="calendar-day"><span class="day-num">13</span></div>
           <div class="calendar-day"><span class="day-num">14</span><div class="event ziqing">内山窑砂锅拍摄</div><div class="event ziqing">橄榄油初稿</div><div class="event pier">COLMO脚本</div></div>
@@ -1414,8 +1414,8 @@
       <div class="todo-item">
         <div class="todo-check" onclick="toggleTodo(this)">✓</div>
         <div class="todo-content">
-          <div class="todo-text">内山窑砂锅已接单✅ 1报备+1日常 8/18发布</div>
-          <div class="todo-meta"><span class="todo-urgent">⚠️急</span> 菜品8/11 脚本8/12 拍8/14 初稿8/16 发布🔒8/18</div>
+          <div class="todo-text">内山窑砂锅已下单✅ 菜品：砂锅胡椒鸡 → 明天出脚本</div>
+          <div class="todo-meta"><span class="todo-normal">🟡进行中</span> 脚本8/12 拍8/14 初稿8/16 发布🔒8/18</div>
         </div>
       </div>
       <div class="todo-item">
@@ -1493,7 +1493,7 @@
   initTabs();
 
   // ═══════════ 休息日分析引擎 ═══════════
-  const TODAY = 10; // 8月10日
+  const TODAY = 11; // 8月11日
 
   // 任务定义：{ day, type, project }
   // type: 'outline'=大纲/看菜, 'script'=脚本, 'shoot'=拍摄, 'draft'=初稿, 'visit'=探店
