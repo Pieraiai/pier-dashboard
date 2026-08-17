@@ -1146,7 +1146,7 @@
     <!-- Mobile: list format -->
     <div class="calendar-list-mobile">
       <div class="calendar-list">
-        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/12</span></h3>
+        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/17</span></h3>
         <div class="cal-filter-bar" style="display:flex;gap:8px;font-size:11px;margin-bottom:12px;">
           <span class="cal-filter-btn all active" data-filter="all" onclick="filterCalendar('all')">全部</span>
           <span class="cal-filter-btn wanwan" data-filter="wanwan" onclick="filterCalendar('wanwan')">弯弯</span>
@@ -1253,7 +1253,7 @@
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/12 周三 <span class="today-badge">今天</span></div>
+          <div class="cal-date">8/12 周三</div>
           <div class="cal-events">
             <div class="cal-event ziqing">内山窑砂锅脚本</div>
             <div class="cal-event ziqing">橄榄油拍摄</div>
@@ -1285,7 +1285,7 @@
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/17 周一</div>
+          <div class="cal-date">8/17 周一 <span class="today-badge">今天</span></div>
           <div class="cal-events">
             <div class="cal-event ziqing">橄榄油发布 <span class="lock-icon">🔒</span></div>
             <div class="cal-event pier">COLMO初稿</div>
@@ -1578,7 +1578,7 @@
   initTabs();
 
   // ═══════════ 休息日分析引擎 ═══════════
-  const TODAY = 12; // 8月12日
+  const TODAY = 17; // 8月17日
 
   // 任务定义：{ day, type, project }
   // type: 'outline'=大纲/看菜, 'script'=脚本, 'shoot'=拍摄, 'draft'=初稿, 'visit'=探店
@@ -1609,7 +1609,7 @@
         {day:25, type:'script', project:'多力脚本'},
         {day:28, type:'draft', project:'多力初稿'},
       ],
-      suggestion: '💡 梭子蟹初稿✅审核中。内山窑砂锅脚本今天(8/12)。<br>多力菜籽油已接单→大纲8/21 脚本8/25 初稿8/28 🔒9/2发布。<br>⚠️多力排竞前后30天，橄榄油8/17发布若恢复需协调。'
+      suggestion: '💡 橄榄油今天(8/17)发布🔒。内山窑砂锅：拍摄8/14→初稿8/16→发布🔒8/18。多力菜籽油已接单→大纲8/21 脚本8/25 初稿8/28 🔒9/2发布。Olé探店8/22、初稿8/23。⚠️多力排竞前后30天，注意与近期发布协调。'
     },
     pier: {
       name: 'Pier先生', emoji: '💙', cls: 'pier',
