@@ -318,7 +318,7 @@
   .rest-summary-val.red { color:#ff3b30; }
   .rest-summary-lbl { font-size:10px; color:var(--text-secondary); }
 
-  .rest-mini-cal { display:flex; gap:3px; margin:10px 0; flex-wrap:wrap; overflow-x:auto; padding:0 4px; }
+  .rest-mini-cal { display:grid; grid-template-columns:repeat(7, 32px); gap:3px; margin:10px 0; padding:0 4px; }
   .rest-mini-day {
     width:22px; height:22px; border-radius: 4px;
     display:flex; align-items:center; justify-content:center;
@@ -653,6 +653,46 @@
   @media (max-width: 767px) {
     .section-switch-hint { display:block; }
   }
+  /* Month picker */
+  .month-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f2f2f7;
+    border-radius: 20px;
+    padding: 2px 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-left: auto;
+  }
+  .month-picker button {
+    border: none;
+    background: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    padding: 0;
+  }
+  .month-picker button:hover { background: #e5e5ea; }
+  .month-picker button:active { background: #d1d1d6; }
+  .month-picker select {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0 4px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -669,7 +709,7 @@
   </div>
   <div class="stats-scroll">
     <div class="stat-card">
-      <div class="stat-value">8单</div>
+      <div class="stat-value">9单</div>
       <div class="stat-label">8月进行中</div>
     </div>
     <div class="stat-card finance-toggle" onclick="toggleFinance()">
@@ -691,11 +731,11 @@
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">¥16,282</div>
+        <div class="stat-value">¥27,594</div>
         <div class="stat-label">子清净利润</div>
       </div>
       <div class="stat-card">
-        <div class="stat-value">¥4,885</div>
+        <div class="stat-value">¥8,279</div>
         <div class="stat-label">Pier到手(子清)</div>
       </div>
       <div class="stat-card">
@@ -710,7 +750,7 @@
 
   <!-- Section 0: Rest Day Analysis -->
   <div class="section active" id="sec-rest">
-    <div class="section-title"><span class="icon">🏖️</span> 本月休息日分析</div>
+    <div class="section-title"><span class="icon">🏖️</span> <span id="restMonthLabel">8月</span>休息日分析<span class="month-picker"><button onclick="changeMonth(-1)">‹</button><select id="restMonthSelect" onchange="setMonth(this.value)"></select><button onclick="changeMonth(1)">›</button></span></div>
 
     <div class="rest-filter-bar">
       <span class="rest-filter-btn active" data-filter="all" onclick="filterRest('all')">全部</span>
@@ -985,6 +1025,35 @@
         <div class="project-notes">报备单·非MCN渠道·返点开票(与MCN单同算法含9%平台费) · 3桶油主推1款其余2款1句带过 · 排竞前后30天 · 全平台授权1年含电商 · 同步抖音 · 有投流预算 · BF待发❓</div>
       </div>
 
+      <!-- 🆕 美团小象超市黑虎虾 8/31发布 -->
+      <div class="project-card ziqing">
+        <div class="project-header">
+          <div>
+            <div class="project-name">🆕 美团小象超市 · 黑虎虾</div>
+            <div class="project-account">Lynn子清</div>
+          </div>
+          <span class="project-status-badge status-pending">已确认合作</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag">报价 ¥7,000</span>
+          <span class="finance-tag">改价八折 ¥5,600</span>
+          <span class="finance-tag">返点40%·MCN已处理</span>
+          <span class="finance-tag highlight">净利润 ¥3,696</span>
+        </div>
+        <div class="finance-row">
+          <span class="finance-tag" style="background:#ece9f8;color:#5856d6">子清 ¥2,587</span>
+          <span class="finance-tag" style="background:#e3f2ff;color:#007aff">Pier ¥1,109</span>
+        </div>
+        <div class="timeline-row">
+          <span class="timeline-dot"><span class="dot done"></span>确认8/19✅</span> →
+          <span class="timeline-dot"><span class="dot future"></span>脚本❓</span> →
+          <span class="timeline-dot"><span class="dot future"></span>拍摄❓</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿❓</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒8/31发布</span>
+        </div>
+        <div class="project-notes">MCN渠道单 · 返点票据MCN已处理（无需开票） · 小红书报备视频 · 八折下单 · 样品费自费100-200内 · 免费分发抖音+视频号 · 全平台授权 · 前30s引小象·封面露LOGO · 12h内维护评论5-8条·热评前三有小象正向 · 笔记保留12月</div>
+      </div>
+
       <!-- ─────── 已发布 ─────── -->
       <div id="published-divider" style="grid-column:1/-1; padding:8px 0; font-size:13px; color:var(--text-secondary); text-align:center; border-top:1px dashed var(--border); margin-top:12px;">
         ✅ 已发布（仅供参考）
@@ -1066,7 +1135,8 @@
         <div class="finance-item"><span class="fi-label">Olé韩国食品节</span><span class="fi-value">¥4,746净</span><span class="fi-value ziqing">子清¥3,322</span><span class="fi-value pier">Pier¥1,424</span></div>
         <div class="finance-item" style="background:#fff3cd"><span class="fi-label">🆕 内山窑砂锅</span><span class="fi-value">¥4,046净</span><span class="fi-value ziqing">子清¥2,832</span><span class="fi-value pier">Pier¥1,214</span></div>
         <div class="finance-item" style="background:#fff3cd"><span class="fi-label">🆕 多力菜籽油</span><span class="fi-value">¥3,570净</span><span class="fi-value ziqing">子清¥2,499</span><span class="fi-value pier">Pier¥1,071</span></div>
-        <div class="finance-item total"><span>合计</span><span class="fi-value red">¥23,898</span><span class="fi-value ziqing">子清¥16,728</span><span class="fi-value pier">Pier¥7,170</span></div>
+        <div class="finance-item" style="background:#fff3cd"><span class="fi-label">🆕 小象超市黑虎虾</span><span class="fi-value">¥3,696净</span><span class="fi-value ziqing">子清¥2,587</span><span class="fi-value pier">Pier¥1,109</span></div>
+        <div class="finance-item total"><span>合计</span><span class="fi-value red">¥27,594</span><span class="fi-value ziqing">子清¥19,315</span><span class="fi-value pier">Pier¥8,279</span></div>
       </div>
 
       <div class="finance-card">
@@ -1112,7 +1182,8 @@
             <tr><td>Olé韩国食品节</td><td>¥4,746</td><td class="amount" style="color:#5856d6">¥3,322</td><td class="amount" style="color:#007aff">¥1,424</td></tr>
             <tr style="background:#fff3cd"><td>🆕 内山窑砂锅</td><td>¥4,046</td><td class="amount" style="color:#5856d6">¥2,832</td><td class="amount" style="color:#007aff">¥1,214</td></tr>
             <tr style="background:#fff3cd"><td>🆕 多力菜籽油</td><td>¥3,570</td><td class="amount" style="color:#5856d6">¥2,499</td><td class="amount" style="color:#007aff">¥1,071</td></tr>
-            <tr class="total-row"><td>合计</td><td class="amount red">¥23,898</td><td class="amount" style="color:#5856d6">¥16,728</td><td class="amount" style="color:#007aff">¥7,170</td></tr>
+            <tr style="background:#fff3cd"><td>🆕 小象超市黑虎虾</td><td>¥3,696</td><td class="amount" style="color:#5856d6">¥2,587</td><td class="amount" style="color:#007aff">¥1,109</td></tr>
+            <tr class="total-row"><td>合计</td><td class="amount red">¥27,594</td><td class="amount" style="color:#5856d6">¥19,315</td><td class="amount" style="color:#007aff">¥8,279</td></tr>
           </table>
 
           <h3 style="margin-top:20px;">已收结款 ✅</h3>
@@ -1141,12 +1212,17 @@
 
   <!-- Section 3: Calendar -->
   <div class="section" id="sec-calendar">
-    <div class="section-title"><span class="icon">📅</span> 8月排期</div>
+    <div class="section-title"><span class="icon">📅</span> <span id="calMonthLabel">8月</span>排期<span class="month-picker"><button onclick="changeMonth(-1)">‹</button><select id="calMonthSelect" onchange="setMonth(this.value)"></select><button onclick="changeMonth(1)">›</button></span></div>
 
+    <!-- 非8月：JS渲染 -->
+    <div id="calMonthRender" style="display:none"></div>
+
+    <!-- 8月静态（默认） -->
+    <div id="calStatic">
     <!-- Mobile: list format -->
     <div class="calendar-list-mobile">
       <div class="calendar-list">
-        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/18</span></h3>
+        <h3>2026年8月排期 <span style="font-size:12px;color:var(--text-secondary)">🔵=今天 8/21</span></h3>
         <div class="cal-filter-bar" style="display:flex;gap:8px;font-size:11px;margin-bottom:12px;">
           <span class="cal-filter-btn all active" data-filter="all" onclick="filterCalendar('all')">全部</span>
           <span class="cal-filter-btn wanwan" data-filter="wanwan" onclick="filterCalendar('wanwan')">弯弯</span>
@@ -1291,7 +1367,7 @@
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/18 周二 <span class="today-badge">今天</span></div>
+          <div class="cal-date">8/18 周二</div>
           <div class="cal-events">
             <div class="cal-event wanwan">好侍发布 <span class="lock-icon">🔒</span></div>
             <div class="cal-event ziqing">内山窑砂锅脚本✅</div>
@@ -1315,7 +1391,7 @@
         </div>
 
         <div class="cal-day-group">
-          <div class="cal-date">8/21 周五</div>
+          <div class="cal-date">8/21 周五 <span class="today-badge">今天</span></div>
           <div class="cal-events">
             <div class="cal-event ziqing">多力大纲</div>
           </div>
@@ -1341,6 +1417,7 @@
           <div class="cal-events">
             <div class="cal-event wanwan">柴火大院脚本</div>
             <div class="cal-event ziqing">Olé发布 <span class="lock-icon">🔒</span></div>
+            <div class="cal-event ziqing">小象大纲</div>
           </div>
         </div>
 
@@ -1348,6 +1425,7 @@
           <div class="cal-date">8/25 周二</div>
           <div class="cal-events">
             <div class="cal-event ziqing">多力脚本</div>
+            <div class="cal-event ziqing">小象脚本</div>
           </div>
         </div>
 
@@ -1359,10 +1437,31 @@
         </div>
 
         <div class="cal-day-group">
+          <div class="cal-date">8/27 周四</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">小象拍摄</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
           <div class="cal-date">8/28 周五</div>
           <div class="cal-events">
             <div class="cal-event wanwan">柴火大院发布 <span class="lock-icon">🔒</span></div>
             <div class="cal-event ziqing">多力初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/29 周六</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">小象初稿</div>
+          </div>
+        </div>
+
+        <div class="cal-day-group">
+          <div class="cal-date">8/31 周一</div>
+          <div class="cal-events">
+            <div class="cal-event ziqing">小象超市黑虎虾发布 <span class="lock-icon">🔒</span></div>
           </div>
         </div>
 
@@ -1419,21 +1518,23 @@
           <div class="calendar-day"><span class="day-num">15</span><div class="event wanwan">好侍初稿</div></div>
           <div class="calendar-day"><span class="day-num">16</span><div class="event pier">COLMO拍摄</div></div>
           <div class="calendar-day"><span class="day-num">17</span><div class="event ziqing">橄榄油发布🔒</div><div class="event pier">COLMO初稿</div></div>
-          <div class="calendar-day today"><span class="day-num">18</span><div class="event wanwan">好侍发布🔒</div><div class="event ziqing">内山窑砂锅脚本✅</div></div>
+          <div class="calendar-day"><span class="day-num">18</span><div class="event wanwan">好侍发布🔒</div><div class="event ziqing">内山窑砂锅脚本✅</div></div>
           <div class="calendar-day"><span class="day-num">19</span><div class="event pier">COLMO发布🔒</div><div class="event ziqing">内山窑砂锅买食材+拍摄</div></div>
           <div class="calendar-day"><span class="day-num">20</span><div class="event wanwan">柴火大院大纲</div><div class="event ziqing">内山窑砂锅剪辑</div></div>
-          <div class="calendar-day"><span class="day-num">21</span><div class="event ziqing">多力大纲</div></div>
+          <div class="calendar-day today"><span class="day-num">21</span><div class="event ziqing">多力大纲</div></div>
           <div class="calendar-day"><span class="day-num">22</span><div class="event ziqing">Olé探店</div><div class="event ziqing">内山窑砂锅发布🔒</div></div>
           <div class="calendar-day"><span class="day-num">23</span><div class="event ziqing">Olé初稿</div></div>
-          <div class="calendar-day"><span class="day-num">24</span><div class="event wanwan">柴火大院脚本</div><div class="event ziqing">Olé发布🔒</div></div>
-          <div class="calendar-day"><span class="day-num">25</span><div class="event ziqing">多力脚本</div></div>
+          <div class="calendar-day"><span class="day-num">24</span><div class="event wanwan">柴火大院脚本</div><div class="event ziqing">Olé发布🔒</div><div class="event ziqing">小象大纲</div></div>
+          <div class="calendar-day"><span class="day-num">25</span><div class="event ziqing">多力脚本</div><div class="event ziqing">小象脚本</div></div>
           <div class="calendar-day"><span class="day-num">26</span><div class="event wanwan">柴火大院初稿</div></div>
-          <div class="calendar-day"><span class="day-num">27</span></div>
+          <div class="calendar-day"><span class="day-num">27</span><div class="event ziqing">小象拍摄</div></div>
           <div class="calendar-day"><span class="day-num">28</span><div class="event wanwan">柴火大院发布🔒</div><div class="event ziqing">多力初稿</div></div>
-          <div class="calendar-day"><span class="day-num">29</span></div>
+          <div class="calendar-day"><span class="day-num">29</span><div class="event ziqing">小象初稿</div></div>
           <div class="calendar-day"><span class="day-num">30</span></div>
+          <div class="calendar-day"><span class="day-num">31</span><div class="event ziqing">小象黑虎虾发布🔒</div></div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
@@ -1502,6 +1603,13 @@
         <div class="todo-content">
           <div class="todo-text">🆕 多力浓香菜籽油已接单 报备单·非MCN渠道·返点开票</div>
           <div class="todo-meta"><span class="todo-normal">🟡进行中</span> 大纲8/21 脚本8/25 初稿8/28 发布🔒9/2 · BF待发❓ · 排竞前后30天注意橄榄油</div>
+        </div>
+      </div>
+      <div class="todo-item">
+        <div class="todo-check" onclick="toggleTodo(this)">✓</div>
+        <div class="todo-content">
+          <div class="todo-text">🆕 小象超市黑虎虾已确认合作</div>
+          <div class="todo-meta"><span class="todo-normal">🟡待启动</span> MCN单·返点已处理 · 报备视频·改价八折 · 发布🔒8/31 · 前30s引小象·封面露LOGO · 评论维护5-8条</div>
         </div>
       </div>
       <div class="todo-item">
@@ -1579,49 +1687,99 @@
   initTabs();
 
   // ═══════════ 休息日分析引擎 ═══════════
-  const TODAY = 18; // 8月18日
+  const TODAY = 21; // 8月21日
 
-  // 任务定义：{ day, type, project }
-  // type: 'outline'=大纲/看菜, 'script'=脚本, 'shoot'=拍摄, 'draft'=初稿, 'visit'=探店
+  // 月份选择
+  const MONTHS = ['2026-08','2026-09','2026-10'];
+  let currentMonth = '2026-08';
+  let calFilter = 'all';
+  function parseMonth(ym) { const [y,m] = ym.split('-').map(Number); return {year:y, month:m}; }
+  function daysInMonth(ym) { const {year,month} = parseMonth(ym); return new Date(year, month, 0).getDate(); }
+  function firstWeekday(ym) { const {year,month} = parseMonth(ym); let d = new Date(year, month-1, 1).getDay(); return d === 0 ? 7 : d; }
+  function monthLabel(ym) { const {year,month} = parseMonth(ym); return year + '年' + month + '月'; }
+  function shortMonthLabel(ym) { const {month} = parseMonth(ym); return month + '月'; }
+  function prevMonth(ym) { let i = MONTHS.indexOf(ym); return i > 0 ? MONTHS[i-1] : ym; }
+  function nextMonth(ym) { let i = MONTHS.indexOf(ym); return i < MONTHS.length-1 ? MONTHS[i+1] : ym; }
+  function isToday(ym, day) { const now = new Date(); const {year,month} = parseMonth(ym); return now.getFullYear()===year && now.getMonth()+1===month && now.getDate()===day; }
+  function isPast(ym, day) { const now = new Date(); now.setHours(0,0,0,0); const {year,month} = parseMonth(ym); return new Date(year, month-1, day) < now; }
+  function changeMonth(delta) {
+    currentMonth = delta < 0 ? prevMonth(currentMonth) : nextMonth(currentMonth);
+    applyMonth();
+  }
+  function setMonth(ym) { currentMonth = ym; applyMonth(); }
+  function initMonthPicker() {
+    const opts = MONTHS.map(m => '<option value="'+m+'" '+(m===currentMonth?'selected':'')+'>'+monthLabel(m)+'</option>').join('');
+    const rs = document.getElementById('restMonthSelect');
+    const cs = document.getElementById('calMonthSelect');
+    if (rs) rs.innerHTML = opts;
+    if (cs) cs.innerHTML = opts;
+  }
+  function applyMonth() {
+    const short = shortMonthLabel(currentMonth);
+    const rl = document.getElementById('restMonthLabel');
+    const cl = document.getElementById('calMonthLabel');
+    if (rl) rl.textContent = short;
+    if (cl) cl.textContent = short;
+    initMonthPicker();
+    buildRestCards(document.querySelector('.rest-filter-btn.active')?.dataset?.filter || 'all');
+    renderCalendarMonth();
+  }
+
+  // 任务定义：{ month, day, type, project }
+  // type: 'outline'=大纲/看菜, 'script'=脚本, 'shoot'=拍摄, 'draft'=初稿, 'visit'=探店, 'publish'=发布
   const taskData = {
     wanwan: {
       name: '弯弯的家', emoji: '❤️', cls: 'wanwan',
       busyDays: [
-        {day:8, type:'draft', project:'味事达初稿'},
-        {day:11, type:'shoot', project:'好侍拍摄'},
-        {day:15, type:'draft', project:'好侍初稿'},
-        {day:20, type:'outline', project:'柴火大院大纲'},
-        {day:24, type:'script', project:'柴火大院脚本'},
-        {day:26, type:'draft', project:'柴火大院初稿'},
+        {month:'2026-08', day:8, type:'draft', project:'味事达初稿'},
+        {month:'2026-08', day:11, type:'shoot', project:'好侍拍摄'},
+        {month:'2026-08', day:15, type:'draft', project:'好侍初稿'},
+        {month:'2026-08', day:20, type:'outline', project:'柴火大院大纲'},
+        {month:'2026-08', day:24, type:'script', project:'柴火大院脚本'},
+        {month:'2026-08', day:26, type:'draft', project:'柴火大院初稿'},
       ],
-      suggestion: '💡 <strong>建议：</strong>好侍今天(8/18)发布🔒。柴火大院大纲8/20、脚本8/24。<br>味事达已发布✅。'
+      suggestion: '💡 <strong>建议：</strong>好侍8/18发布✅。柴火大院大纲8/20、脚本8/24。<br>味事达已发布✅。'
     },
     ziqing: {
       name: 'Lynn子清', emoji: '💜', cls: 'ziqing',
       busyDays: [
-        {day:7, type:'shoot', project:'梭子蟹拍摄'},
-        {day:9, type:'draft', project:'梭子蟹初稿'},
-        {day:10, type:'script', project:'Olé脚本'},
-        {day:12, type:'shoot', project:'橄榄油拍摄'},
-        {day:14, type:'draft', project:'橄榄油初稿'},
-        {day:22, type:'visit', project:'Olé探店'},
-        {day:23, type:'draft', project:'Olé初稿'},
-        {day:21, type:'outline', project:'多力大纲'},
-        {day:25, type:'script', project:'多力脚本'},
-        {day:28, type:'draft', project:'多力初稿'},
+        {month:'2026-08', day:7, type:'shoot', project:'梭子蟹拍摄'},
+        {month:'2026-08', day:9, type:'draft', project:'梭子蟹初稿'},
+        {month:'2026-08', day:10, type:'script', project:'Olé脚本'},
+        {month:'2026-08', day:12, type:'shoot', project:'橄榄油拍摄'},
+        {month:'2026-08', day:14, type:'draft', project:'橄榄油初稿'},
+        {month:'2026-08', day:22, type:'visit', project:'Olé探店'},
+        {month:'2026-08', day:23, type:'draft', project:'Olé初稿'},
+        {month:'2026-08', day:21, type:'outline', project:'多力大纲'},
+        {month:'2026-08', day:25, type:'script', project:'多力脚本'},
+        {month:'2026-08', day:28, type:'draft', project:'多力初稿'},
+        {month:'2026-08', day:24, type:'outline', project:'小象大纲'},
+        {month:'2026-08', day:25, type:'script', project:'小象脚本'},
+        {month:'2026-08', day:27, type:'shoot', project:'小象拍摄'},
+        {month:'2026-08', day:29, type:'draft', project:'小象初稿'},
+        {month:'2026-08', day:31, type:'publish', project:'小象黑虎虾发布'},
+        {month:'2026-09', day:1, type:'outline', project:'美的花瓣电饭煲 大纲'},
+        {month:'2026-09', day:2, type:'publish', project:'多力发布🔒'},
+        {month:'2026-09', day:3, type:'script', project:'美的花瓣电饭煲 脚本'},
+        {month:'2026-09', day:6, type:'shoot', project:'美的花瓣电饭煲 视频'},
+        {month:'2026-09', day:9, type:'publish', project:'美的花瓣电饭煲 发布🔒'},
       ],
-      suggestion: '💡 内山窑砂锅：脚本8/18确认✅，明天8/19买食材+拍摄，8/20剪辑，发布🔒暂定8/22。多力菜籽油已接单→大纲8/21 脚本8/25 初稿8/28 🔒9/2发布。Olé探店8/22、初稿8/23。⚠️多力排竞前后30天，注意与近期发布协调。'
+      suggestions: {
+        '2026-08': '💡 内山窑砂锅：脚本8/18确认✅，8/19买食材+拍摄、8/20剪辑，发布🔒8/22。多力菜籽油已接单→大纲8/21 脚本8/25 初稿8/28 🔒9/2发布。Olé探店8/22、初稿8/23。🆕小象超市黑虎虾已排：大纲8/24·脚本8/25·拍摄8/27·初稿8/29·🔒8/31发布（脚本→拍摄隔一天留品牌方拍板）。⚠️多力排竞前后30天，注意与近期发布协调。',
+        '2026-09': '💡 9月两单：多力浓香菜籽油🔒9/2发布（大纲8/21·脚本8/25·初稿8/28）；美的花瓣电饭煲🔒9/9发布（大纲9/1·脚本9/3·视频9/6）。月初给子清充分休整。'
+      }
     },
     pier: {
       name: 'Pier先生', emoji: '💙', cls: 'pier',
       busyDays: [
-        {day:14, type:'script', project:'COLMO脚本'},
-        {day:16, type:'shoot', project:'COLMO拍摄'},
-        {day:17, type:'draft', project:'COLMO初稿'},
+        {month:'2026-08', day:14, type:'script', project:'COLMO脚本'},
+        {month:'2026-08', day:16, type:'shoot', project:'COLMO拍摄'},
+        {month:'2026-08', day:17, type:'draft', project:'COLMO初稿'},
       ],
       suggestion: ''
     }
   };
+  function monthBusy(key) { return taskData[key].busyDays.filter(b => b.month === currentMonth); }
 
   // ═══ 个人计划存储 (localStorage) ═══
   const PLAN_KEY = 'restPlans_v1';
@@ -1631,13 +1789,13 @@
   }
   function savePlan(person, day, text) {
     const plans = loadAllPlans();
-    const k = person + '_' + day;
+    const k = person + '_' + currentMonth + '_' + day;
     if (!text) { delete plans[k]; }
     else { plans[k] = text; }
     localStorage.setItem(PLAN_KEY, JSON.stringify(plans));
   }
   function getPlan(person, day) {
-    return loadAllPlans()[person + '_' + day] || '';
+    return loadAllPlans()[person + '_' + currentMonth + '_' + day] || '';
   }
   function hasPlan(person, day) {
     return !!getPlan(person, day);
@@ -1656,15 +1814,14 @@
 
     if (filter === 'all') {
       // ═══ Couple card: wanwan + pier merged ═══
-      const ww = taskData['wanwan'];
-      const pr = taskData['pier'];
-      const wwBusy = new Set(ww.busyDays.map(b => b.day));
-      const prBusy = new Set(pr.busyDays.map(b => b.day));
+      const wwBusy = new Set(monthBusy('wanwan').map(b => b.day));
+      const prBusy = new Set(monthBusy('pier').map(b => b.day));
+      const totalDays = daysInMonth(currentMonth);
       let restCount = 0, wwCount = 0, prCount = 0, bothCount = 0;
       const plans = loadAllPlans();
 
       let calHtml = '';
-      for (let d = 1; d <= 31; d++) {
+      for (let d = 1; d <= totalDays; d++) {
         let cls = 'clickable';
         const wHas = wwBusy.has(d);
         const pHas = prBusy.has(d);
@@ -1681,9 +1838,9 @@
           cls += ' both-busy';
           bothCount++;
         }
-        if (d < TODAY) cls += ' past';
-        if (d === TODAY) cls += ' today';
-        const planDot = (plans['wanwan_' + d] || plans['pier_' + d]) ? '<span class="plan-dot"></span>' : '';
+        if (isPast(currentMonth, d)) cls += ' past';
+        if (isToday(currentMonth, d)) cls += ' today';
+        const planDot = (getPlan('wanwan', d) || getPlan('pier', d)) ? '<span class="plan-dot"></span>' : '';
         calHtml += '<div class="rest-mini-day ' + cls + '" onclick="openDayDetail(\'couple\','+d+')">' + d + planDot + '</div>';
       }
 
@@ -1692,7 +1849,9 @@
       const busySet = new Set(coupleBusyDays);
       let sugHtml = '';
 
-      if (coupleBusyDays.length <= 5) {
+      if (coupleBusyDays.length === 0) {
+        sugHtml = '<div class="rest-no-suggestion">🎉 本月弯弯与Pier均无任务日，可自由安排</div>';
+      } else if (coupleBusyDays.length <= 5) {
         const daysStr = coupleBusyDays.map(d=>d+'日').join('、');
         sugHtml = '<div class="rest-no-suggestion">🎉 本月仅'+coupleBusyDays.length+'个任务日（'+daysStr+'），其余均可共同安排</div>';
       } else {
@@ -1700,14 +1859,14 @@
         const isolated = [];
         for (const d of coupleBusyDays) {
           const prevRest = d === 1 || !busySet.has(d - 1);
-          const nextRest = d === 31 || !busySet.has(d + 1);
+          const nextRest = d === totalDays || !busySet.has(d + 1);
           if (prevRest && nextRest) isolated.push(d);
         }
 
         // Find longest continuous rest block
         let longestStart = 1, longestLen = 0;
         let curStart = 1, curLen = 0;
-        for (let d = 1; d <= 31; d++) {
+        for (let d = 1; d <= totalDays; d++) {
           if (!busySet.has(d)) {
             if (curLen === 0) curStart = d;
             curLen++;
@@ -1770,11 +1929,12 @@
 
   function renderPersonRestCard(key, plans) {
     const p = taskData[key];
-    const busySet = new Set(p.busyDays.map(b => b.day));
+    const busySet = new Set(monthBusy(key).map(b => b.day));
+    const totalDays = daysInMonth(currentMonth);
     let restCount = 0, busyCount = 0;
 
     let calHtml = '';
-    for (let d = 1; d <= 31; d++) {
+    for (let d = 1; d <= totalDays; d++) {
       let cls = 'clickable';
       if (busySet.has(d)) {
         cls += ' busy';
@@ -1783,14 +1943,17 @@
         cls += ' rest';
         restCount++;
       }
-      if (d < TODAY) cls += ' past';
-      if (d === TODAY) cls += ' today';
-      const planDot = plans[key + '_' + d] ? '<span class="plan-dot"></span>' : '';
+      if (isPast(currentMonth, d)) cls += ' past';
+      if (isToday(currentMonth, d)) cls += ' today';
+      const planDot = getPlan(key, d) ? '<span class="plan-dot"></span>' : '';
       calHtml += '<div class="rest-mini-day ' + cls + '" onclick="openDayDetail(\''+key+'\','+d+')">' + d + planDot + '</div>';
     }
 
     let sugHtml = '';
-    if (p.suggestion) {
+    const monthSug = p.suggestions && p.suggestions[currentMonth];
+    if (monthSug) {
+      sugHtml = '<div class="rest-suggestion">' + monthSug + '</div>';
+    } else if (p.suggestion) {
       sugHtml = '<div class="rest-suggestion">' + p.suggestion + '</div>';
     } else {
       const allTaskDays = [...busySet].sort((a,b)=>a-b).map(d=>d+'日').join('、');
@@ -1824,35 +1987,35 @@
 
     if (person === 'couple') {
       // ═══ Couple mode: show both wanwan + pier ═══
-      document.getElementById('dayModalTitle').innerHTML = '💕 弯弯 + Pier · 8月' + day + '日';
-      const ww = taskData['wanwan'];
-      const pr = taskData['pier'];
-      const wwBusy = new Set(ww.busyDays.map(b => b.day));
-      const prBusy = new Set(pr.busyDays.map(b => b.day));
+      const mLabel = parseMonth(currentMonth).month;
+      document.getElementById('dayModalTitle').innerHTML = '💕 弯弯 + Pier · ' + mLabel + '月' + day + '日';
+      const wwBusy = new Set(monthBusy('wanwan').map(b => b.day));
+      const prBusy = new Set(monthBusy('pier').map(b => b.day));
       const isWwBusy = wwBusy.has(day);
       const isPrBusy = prBusy.has(day);
+      const past = isPast(currentMonth, day);
 
-      if ((isWwBusy || isPrBusy) && day >= TODAY) {
+      if ((isWwBusy || isPrBusy) && !past) {
         bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">📋 当日任务：</div>';
         if (isWwBusy) {
-          ww.busyDays.filter(b => b.day === day).forEach(t => {
+          monthBusy('wanwan').filter(b => b.day === day).forEach(t => {
             bodyHtml += '<div class="day-task-item"><span class="task-type" style="background:#ff3b30">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+' <span style="color:#ff3b30;font-size:11px;margin-left:4px;">👩 弯弯</span></div>';
           });
         }
         if (isPrBusy) {
-          pr.busyDays.filter(b => b.day === day).forEach(t => {
+          monthBusy('pier').filter(b => b.day === day).forEach(t => {
             bodyHtml += '<div class="day-task-item"><span class="task-type" style="background:#007aff">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+' <span style="color:#007aff;font-size:11px;margin-left:4px;">👨 Pier</span></div>';
           });
         }
-      } else if ((isWwBusy || isPrBusy) && day < TODAY) {
+      } else if ((isWwBusy || isPrBusy) && past) {
         bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">✅ 已完成：</div>';
         if (isWwBusy) {
-          ww.busyDays.filter(b => b.day === day).forEach(t => {
+          monthBusy('wanwan').filter(b => b.day === day).forEach(t => {
             bodyHtml += '<div class="day-task-item" style="background:#f2f2f7;color:var(--text-secondary);"><span class="task-type" style="background:#34c759">✓</span> '+t.project+' <span style="font-size:11px;margin-left:4px;">👩 弯弯</span></div>';
           });
         }
         if (isPrBusy) {
-          pr.busyDays.filter(b => b.day === day).forEach(t => {
+          monthBusy('pier').filter(b => b.day === day).forEach(t => {
             bodyHtml += '<div class="day-task-item" style="background:#f2f2f7;color:var(--text-secondary);"><span class="task-type" style="background:#34c759">✓</span> '+t.project+' <span style="font-size:11px;margin-left:4px;">👨 Pier</span></div>';
           });
         }
@@ -1868,25 +2031,27 @@
         }
         bodyHtml += '<div style="font-size:12px;color:var(--text-secondary);margin:10px 0 4px;border-top:1px solid #e5e5ea;padding-top:8px;">添加共同计划：</div>';
         bodyHtml += '<textarea class="day-plan-input" id="dayPlanText" placeholder="写下两人计划…例如：逛街、看电影、去西湖">' + (wwPlan || '') + '</textarea>';
-        bodyHtml += '<button class="day-plan-save" onclick="saveDayPlan(\'wanwan\','+day+');saveDayPlan(\'pier\','+day+');closeDayModal();buildRestCards(\'all\');">💾 保存到两人</button>';
+        bodyHtml += '<button class="day-plan-save" onclick="saveDayPlan(\'wanwan\','+day+');saveDayPlan(\'pier\','+day+');closeDayModal();applyMonth();">💾 保存到两人</button>';
         if (wwPlan || prPlan) {
-          bodyHtml += '<button class="day-plan-delete" onclick="deleteDayPlan(\'wanwan\','+day+');deleteDayPlan(\'pier\','+day+');closeDayModal();buildRestCards(\'all\');">🗑 清除两人计划</button>';
+          bodyHtml += '<button class="day-plan-delete" onclick="deleteDayPlan(\'wanwan\','+day+');deleteDayPlan(\'pier\','+day+');closeDayModal();applyMonth();">🗑 清除两人计划</button>';
         }
       }
     } else {
       // ═══ Single person mode ═══
       const p = taskData[person];
-      document.getElementById('dayModalTitle').innerHTML = p.emoji + ' ' + p.name + ' · 8月' + day + '日';
-      const busySet = new Set(p.busyDays.map(b => b.day));
+      const mLabel = parseMonth(currentMonth).month;
+      document.getElementById('dayModalTitle').innerHTML = p.emoji + ' ' + p.name + ' · ' + mLabel + '月' + day + '日';
+      const busySet = new Set(monthBusy(person).map(b => b.day));
+      const past = isPast(currentMonth, day);
 
-      if (busySet.has(day) && day >= TODAY) {
-        const tasks = p.busyDays.filter(b => b.day === day);
+      if (busySet.has(day) && !past) {
+        const tasks = monthBusy(person).filter(b => b.day === day);
         bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">📋 当日任务：</div>';
         tasks.forEach(t => {
           bodyHtml += '<div class="day-task-item"><span class="task-type">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+'</div>';
         });
-      } else if (busySet.has(day) && day < TODAY) {
-        const tasks = p.busyDays.filter(b => b.day === day);
+      } else if (busySet.has(day) && past) {
+        const tasks = monthBusy(person).filter(b => b.day === day);
         bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">✅ 已完成：</div>';
         tasks.forEach(t => {
           bodyHtml += '<div class="day-task-item" style="background:#f2f2f7;color:var(--text-secondary);"><span class="task-type" style="background:#34c759">✓</span> '+t.project+'</div>';
@@ -1935,16 +2100,91 @@
     buildRestCards(account);
   }
 
-  // Init rest cards on load
-  buildRestCards('all');
+  // Init rest cards + month on load
+  initMonthPicker();
+  applyMonth();
+
+  // Render calendar for non-8月 months (8月 uses static HTML in #calStatic)
+  function renderCalendarMonth() {
+    const staticEl = document.getElementById('calStatic');
+    const renderEl = document.getElementById('calMonthRender');
+    if (currentMonth === '2026-08') {
+      staticEl.style.display = '';
+      renderEl.style.display = 'none';
+      renderEl.innerHTML = '';
+      return;
+    }
+    staticEl.style.display = 'none';
+    renderEl.style.display = '';
+
+    const typeLabel = {outline:'大纲',script:'脚本',shoot:'拍摄',draft:'初稿',visit:'探店',publish:'发布🔒'};
+    const wkArr = ['日','一','二','三','四','五','六'];
+    const {year,month} = parseMonth(currentMonth);
+    const total = daysInMonth(currentMonth);
+    const first = firstWeekday(currentMonth);
+
+    function filterBar() {
+      return '<div class="cal-filter-bar" style="display:flex;gap:8px;font-size:11px;margin-bottom:12px;">' +
+        '<span class="cal-filter-btn all'+(calFilter==='all'?' active':'')+'" data-filter="all" onclick="filterCalendar(\'all\')">全部</span>' +
+        '<span class="cal-filter-btn wanwan'+(calFilter==='wanwan'?' active':'')+'" data-filter="wanwan" onclick="filterCalendar(\'wanwan\')">弯弯</span>' +
+        '<span class="cal-filter-btn ziqing'+(calFilter==='ziqing'?' active':'')+'" data-filter="ziqing" onclick="filterCalendar(\'ziqing\')">子清</span>' +
+        '<span class="cal-filter-btn pier'+(calFilter==='pier'?' active':'')+'" data-filter="pier" onclick="filterCalendar(\'pier\')">Pier</span>' +
+        '</div>';
+    }
+    function evFor(d) {
+      const out = [];
+      for (const k of ['wanwan','ziqing','pier']) {
+        monthBusy(k).filter(b => b.day === d).forEach(t => out.push({cls:k, html: typeLabel[t.type] + ' ' + t.project}));
+      }
+      return out;
+    }
+
+    // Desktop grid
+    let grid = '<div class="calendar-grid-desktop"><div class="calendar-grid"><div class="calendar-header"><h3>' + monthLabel(currentMonth) + '</h3>' + filterBar() + '</div>';
+    grid += '<div class="calendar-week">';
+    for (const w of ['一','二','三','四','五','六','日']) grid += '<div class="calendar-weekday">' + w + '</div>';
+    grid += '</div><div class="calendar-days">';
+    for (let i = 1; i < first; i++) grid += '<div class="calendar-day empty"></div>';
+    for (let d = 1; d <= total; d++) {
+      let cls = 'calendar-day';
+      if (isToday(currentMonth, d)) cls += ' today';
+      else if (isPast(currentMonth, d)) cls += ' past';
+      let inner = '<span class="day-num">' + d + '</span>';
+      evFor(d).forEach(t => { if (calFilter === 'all' || calFilter === t.cls) inner += '<div class="event ' + t.cls + '">' + t.html + '</div>'; });
+      grid += '<div class="' + cls + '">' + inner + '</div>';
+    }
+    grid += '</div></div></div>';
+
+    // Mobile list
+    let list = '<div class="calendar-list-mobile"><div class="calendar-list"><h3>' + monthLabel(currentMonth) + '</h3>' + filterBar();
+    let any = false;
+    for (let d = 1; d <= total; d++) {
+      const date = new Date(year, month - 1, d);
+      const wk = wkArr[date.getDay()];
+      const evs = evFor(d).filter(t => calFilter === 'all' || calFilter === t.cls);
+      if (evs.length === 0) continue;
+      any = true;
+      const todayBadge = isToday(currentMonth, d) ? ' <span class="today-badge">今天</span>' : '';
+      let evHtml = '';
+      evs.forEach(t => { evHtml += '<div class="cal-event ' + t.cls + '">' + t.html + '</div>'; });
+      list += '<div class="cal-day-group"><div class="cal-date">' + month + '/' + d + ' 周' + wk + todayBadge + '</div><div class="cal-events">' + evHtml + '</div></div>';
+    }
+    if (!any) list += '<div class="cal-day-group"><div class="cal-events"><div class="cal-event">本月暂无排期 🟢</div></div></div>';
+    list += '</div></div>';
+
+    renderEl.innerHTML = grid + list;
+  }
 
   // Calendar filter
   function filterCalendar(account) {
+    calFilter = account;
     document.querySelectorAll('.cal-filter-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.cal-filter-btn[data-filter="' + account + '"]').forEach(b => b.classList.add('active'));
 
-    // Mobile list: filter events within each day group
-    document.querySelectorAll('.calendar-list .cal-day-group').forEach(group => {
+    if (currentMonth !== '2026-08') { renderCalendarMonth(); return; }
+
+    // Mobile list: filter events within each day group (8月 static)
+    document.querySelectorAll('#calStatic .calendar-list .cal-day-group').forEach(group => {
       const events = group.querySelectorAll('.cal-event');
       let visible = 0;
       events.forEach(ev => {
@@ -1958,8 +2198,8 @@
       group.style.display = visible > 0 ? '' : 'none';
     });
 
-    // Desktop grid: filter events within each day cell
-    document.querySelectorAll('.calendar-grid .calendar-day').forEach(cell => {
+    // Desktop grid: filter events within each day cell (8月 static)
+    document.querySelectorAll('#calStatic .calendar-grid .calendar-day').forEach(cell => {
       const events = cell.querySelectorAll('.event');
       let visible = 0;
       events.forEach(ev => {
@@ -1973,16 +2213,16 @@
     });
   }
 
-  // Past dates toggle
+  // Past dates toggle (仅8月 static)
   function togglePastDates() {
     const el = document.getElementById('pastDates');
+    if (!el) return;
     const btn = document.getElementById('pastToggle');
     const icon = document.getElementById('pastToggleIcon');
     if (el.style.display === 'none') {
       el.style.display = '';
       icon.textContent = '▼';
       btn.classList.add('open');
-      // reset any hidden groups from filter
       el.querySelectorAll('.cal-day-group').forEach(g => g.style.display = '');
       el.querySelectorAll('.cal-event').forEach(e => e.style.display = '');
     } else {
