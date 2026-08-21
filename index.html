@@ -424,6 +424,23 @@
   .rest-legend .dot.rest-dot { background:#34c759; }
   .rest-legend .dot.busy-dot { background:#ff3b30; }
 
+  .rest-card-body { display:flex; gap:12px; align-items:flex-start; }
+  .rest-card-left { flex:0 0 auto; }
+  .rest-card-right { flex:1 1 auto; min-width:0; }
+  .rest-upcoming {
+    background:#f9f9fb; border-radius:10px; padding:10px 12px;
+    font-size:12px; line-height:1.7; color:var(--text);
+  }
+  .rest-upcoming-title { font-weight:700; font-size:13px; margin-bottom:6px; color:var(--text); display:flex; justify-content:space-between; align-items:center; }
+  .rest-upcoming-empty { color:#8e8e93; font-size:12px; }
+  .rest-upcoming-item { display:flex; align-items:baseline; gap:8px; }
+  .rest-upcoming-date { font-weight:700; color:#ff9500; min-width:2.2em; }
+  .rest-upcoming-name { flex:1; }
+  @media (max-width: 600px) {
+    .rest-card-body { flex-direction: column; }
+    .rest-card-right { width:100%; }
+  }
+
   /* Calendar - mobile list format */
   .calendar-list {
     background: var(--card-bg);
@@ -1812,6 +1829,7 @@
         {month:'2026-08', day:10, type:'script', project:'Olé脚本'},
         {month:'2026-08', day:22, type:'visit', project:'Olé探店'},
         {month:'2026-08', day:23, type:'draft', project:'Olé初稿'},
+        {month:'2026-08', day:24, type:'publish', project:'Olé发布🔒'},
         {month:'2026-08', day:18, type:'script', project:'内山窑砂锅 脚本✅'},
         {month:'2026-08', day:19, type:'shoot', project:'内山窑砂锅 拍摄'},
         {month:'2026-08', day:20, type:'draft', project:'内山窑砂锅 剪辑'},
@@ -2047,6 +2065,23 @@
       sugHtml = '<div class="rest-no-suggestion">🎉 本月可自由安排 '+restCount+'天</div>';
     }
 
+    // 待发布项目（此人所有未发布项目，按发布日排序）
+    let upcomingHtml = '';
+    const allPublish = (p.busyDays || []).filter(t => t.type === 'publish').filter(t => {
+      if (t.month > currentMonth) return true;
+      if (t.month === currentMonth && t.day >= TODAY) return true;
+      return false;
+    }).sort((a,b) => (a.month.localeCompare(b.month) || a.day - b.day));
+    if (allPublish.length === 0) {
+      upcomingHtml = '<div class="rest-upcoming-empty">暂无待发布项目</div>';
+    } else {
+      upcomingHtml = '<div class="rest-upcoming-title">📋 待发布</div>' + allPublish.map(t => {
+        const m = parseInt(t.month.split('-')[1], 10);
+        const name = t.project.replace(/发布🔒|发布|✅/g, '').replace(/\s+/g, ' ').trim();
+        return '<div class="rest-upcoming-item"><span class="rest-upcoming-date">' + m + '.' + t.day + '</span><span class="rest-upcoming-name">' + (name || t.project) + '</span></div>';
+      }).join('');
+    }
+
     return `
       <div class="rest-card ${p.cls}" data-person="${key}">
         <div class="rest-card-header">
@@ -2070,7 +2105,14 @@
             </div>
           </div>
         </div>
-        <div class="rest-mini-cal">${calHtml}</div>
+        <div class="rest-card-body">
+          <div class="rest-card-left">
+            <div class="rest-mini-cal">${calHtml}</div>
+          </div>
+          <div class="rest-card-right">
+            <div class="rest-upcoming">${upcomingHtml}</div>
+          </div>
+        </div>
         ${sugHtml}
       </div>`;
   }
