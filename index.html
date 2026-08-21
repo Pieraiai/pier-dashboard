@@ -328,9 +328,13 @@
   }
   .rest-mini-day.rest      { background:#e8f8ed; color:#34c759; }
   .rest-mini-day.busy      { background:#fff0ef; color:#ff3b30; font-weight:700; }
+  .rest-mini-day.user      { background:#e3f2ff; color:#007aff; font-weight:700; }   /* 🔵 大纲/脚本：你(用户)可做 */
+  .rest-mini-day.light     { background:#f0f0f5; color:#8e8e93; }                     /* ⚪ 发布：轻松活儿 */
   .rest-mini-day.ww-only   { background:#ff3b30; color:#fff; font-weight:700; }
   .rest-mini-day.pr-only   { background:#007aff; color:#fff; font-weight:700; }
   .rest-mini-day.both-busy { background:linear-gradient(135deg, #ff3b30 50%, #007aff 50%); color:#fff; font-weight:700; }
+  .rest-mini-day.locked    { outline:2px dashed #ff9500; outline-offset:-2px; }
+  .rest-mini-day.locked::after { content:'🔒'; position:absolute; top:0px; right:1px; font-size:9px; }
   .rest-mini-day.today     { outline: 2px solid var(--accent3); outline-offset:1px; }
   .rest-mini-day.past      { opacity:0.4; }
   .rest-mini-day.clickable { cursor:pointer; transition: all 0.15s; }
@@ -451,6 +455,9 @@
   }
   .cal-event.wanwan { background:#ffe5e5; color:#ff3b30; }
   .cal-event.ziqing { background:#ece9f8; color:#5856d6; }
+  .cal-event.ziqing.wt-user, .event.ziqing.wt-user { background:#e3f2ff; color:#007aff; font-weight:600; }
+  .cal-event.ziqing.wt-heavy, .event.ziqing.wt-heavy { background:#ffe5e5; color:#ff3b30; font-weight:600; }
+  .cal-event.ziqing.wt-light, .event.ziqing.wt-light { background:#f0f0f5; color:#8e8e93; }
   .cal-event.pier { background:#e3f2ff; color:#007aff; }
   .cal-event .lock-icon { font-weight:700; }
 
@@ -861,12 +868,13 @@
           <span class="finance-tag" style="background:#e3f2ff;color:#007aff">Pier ¥1,176</span>
         </div>
         <div class="timeline-row">
-          <span class="timeline-dot"><span class="dot current"></span>脚本8/5✅(暂停)</span> →
-          <span class="timeline-dot"><span class="dot future"></span>拍摄8/26</span> →
-          <span class="timeline-dot"><span class="dot future"></span>初稿8/28</span> →
-          <span class="timeline-dot"><span class="dot locked"></span>发布待定≥10/3</span>
+          <span class="timeline-dot"><span class="dot future"></span>大纲9/7</span> →
+          <span class="timeline-dot"><span class="dot future"></span>脚本9/9</span> →
+          <span class="timeline-dot"><span class="dot future"></span>拍摄9/10</span> →
+          <span class="timeline-dot"><span class="dot future"></span>初稿9/15</span> →
+          <span class="timeline-dot"><span class="dot locked"></span>🔒10/6发布</span>
         </div>
-        <div class="project-notes">禁意大利/禁物理冷榨/禁温度数字/禁欧盟酸度 · BGM轻音乐 · 开头尽快出产品 · ⚠️初稿目标8/28；发布须≥10/3避多力排竞(8/3~10/2)；脚本审核暂停中（西班牙领导度假），需推动</div>
+        <div class="project-notes">禁意大利/禁物理冷榨/禁温度数字/禁欧盟酸度 · BGM轻音乐 · 开头尽快出产品 · ⚠️已调至9月从容档期；发布🔒10/6须≥10/3避多力排竞(8/3~10/2)；脚本审核暂停中（西班牙领导度假），需推动；🔒9/11–9/13子清锁档不可拍摄剪辑</div>
       </div>
 
       <!-- 好侍咖喱 8/18 -->
@@ -1304,7 +1312,6 @@
           <div class="cal-events">
             <div class="cal-event wanwan">味事达拍摄✅</div>
             <div class="cal-event ziqing">菌菇发布✅</div>
-            <div class="cal-event ziqing">橄榄油脚本✅ 审核暂停</div>
             <div class="cal-event pier">COLMO看菜</div>
           </div>
         </div>
@@ -1457,7 +1464,6 @@
           <div class="cal-date">8/26 周三</div>
           <div class="cal-events">
             <div class="cal-event wanwan">柴火大院初稿</div>
-            <div class="cal-event ziqing">橄榄油拍摄</div>
           </div>
         </div>
 
@@ -1474,7 +1480,6 @@
           <div class="cal-events">
             <div class="cal-event wanwan">柴火大院发布 <span class="lock-icon">🔒</span></div>
             <div class="cal-event ziqing">多力初稿</div>
-            <div class="cal-event ziqing">橄榄油初稿</div>
           </div>
         </div>
 
@@ -1539,7 +1544,7 @@
           <div class="calendar-day"><span class="day-num">2</span></div>
           <div class="calendar-day"><span class="day-num">3</span><div class="event wanwan">好侍大纲</div></div>
           <div class="calendar-day"><span class="day-num">4</span><div class="event wanwan">康师傅发布✅</div><div class="event ziqing">梭子蟹脚本</div></div>
-          <div class="calendar-day"><span class="day-num">5</span><div class="event wanwan">味事达拍摄✅</div><div class="event ziqing">菌菇发布✅</div><div class="event ziqing">橄榄油脚本✅(暂停)</div><div class="event pier">COLMO看菜</div></div>
+          <div class="calendar-day"><span class="day-num">5</span><div class="event wanwan">味事达拍摄✅</div><div class="event ziqing">菌菇发布✅</div><div class="event pier">COLMO看菜</div></div>
           <div class="calendar-day"><span class="day-num">6</span><div class="event wanwan">好侍脚本✅</div></div>
           <div class="calendar-day"><span class="day-num">7</span><div class="event ziqing">梭子蟹拍摄✅</div></div>
           <div class="calendar-day"><span class="day-num">8</span><div class="event wanwan">味事达初稿 ✅</div></div>
@@ -1560,9 +1565,9 @@
           <div class="calendar-day"><span class="day-num">23</span><div class="event ziqing">Olé初稿</div></div>
           <div class="calendar-day"><span class="day-num">24</span><div class="event wanwan">柴火大院脚本</div><div class="event ziqing">Olé发布🔒</div><div class="event ziqing">小象大纲</div></div>
           <div class="calendar-day"><span class="day-num">25</span><div class="event ziqing">多力脚本</div><div class="event ziqing">小象脚本</div></div>
-          <div class="calendar-day"><span class="day-num">26</span><div class="event wanwan">柴火大院初稿</div><div class="event ziqing">橄榄油拍摄</div></div>
+          <div class="calendar-day"><span class="day-num">26</span><div class="event wanwan">柴火大院初稿</div></div>
           <div class="calendar-day"><span class="day-num">27</span><div class="event ziqing">小象拍摄</div><div class="event ziqing">WMF脚本</div></div>
-          <div class="calendar-day"><span class="day-num">28</span><div class="event wanwan">柴火大院发布🔒</div><div class="event ziqing">多力初稿</div><div class="event ziqing">橄榄油初稿</div></div>
+          <div class="calendar-day"><span class="day-num">28</span><div class="event wanwan">柴火大院发布🔒</div><div class="event ziqing">多力初稿</div></div>
           <div class="calendar-day"><span class="day-num">29</span><div class="event ziqing">小象初稿</div></div>
           <div class="calendar-day"><span class="day-num">30</span></div>
           <div class="calendar-day"><span class="day-num">31</span><div class="event ziqing">小象黑虎虾发布🔒</div><div class="event ziqing">WMF初稿</div></div>
@@ -1608,7 +1613,7 @@
         <div class="todo-check" onclick="toggleTodo(this)">✓</div>
         <div class="todo-content">
           <div class="todo-text">西班牙橄榄油脚本审核暂停（领导度假中）</div>
-          <div class="todo-meta"><span class="todo-normal">🟡暂停</span> 档期不急</div>
+          <div class="todo-meta"><span class="todo-normal">🟡暂停</span> 已调9月从容档期：大纲9/7·脚本9/9·拍摄9/10·初稿9/15·🔒10/6发布 · 9/11–9/13子清锁档</div>
         </div>
       </div>
       <div class="todo-item">
@@ -1727,8 +1732,24 @@
   window.addEventListener('resize', initTabs);
   initTabs();
 
+  // 静态排期日历：子清事件按工作类型重新着色（大纲/脚本=蓝·你可做，拍摄/剪辑/初稿=红·子清忙，发布=浅）
+  function applyStaticWorkColors() {
+    document.querySelectorAll('.cal-event.ziqing, .event.ziqing').forEach(el => {
+      const t = el.textContent;
+      if (/大纲|脚本/.test(t)) el.classList.add('wt-user');
+      else if (/拍摄|剪辑|初稿/.test(t)) el.classList.add('wt-heavy');
+      else if (/发布/.test(t)) el.classList.add('wt-light');
+    });
+  }
+  applyStaticWorkColors();
+
   // ═══════════ 休息日分析引擎 ═══════════
   const TODAY = 22; // 8月22日
+
+  // 子清锁档：这些日期不可拍摄/剪辑，仅可做大纲脚本(用户)与发布
+  const ZIQING_LOCKED = {
+    '2026-09': [11, 12, 13]
+  };
 
   // 月份选择
   const MONTHS = ['2026-08','2026-09','2026-10'];
@@ -1787,8 +1808,6 @@
         {month:'2026-08', day:7, type:'shoot', project:'梭子蟹拍摄'},
         {month:'2026-08', day:9, type:'draft', project:'梭子蟹初稿'},
         {month:'2026-08', day:10, type:'script', project:'Olé脚本'},
-        {month:'2026-08', day:26, type:'shoot', project:'橄榄油拍摄'},
-        {month:'2026-08', day:28, type:'draft', project:'橄榄油初稿'},
         {month:'2026-08', day:22, type:'visit', project:'Olé探店'},
         {month:'2026-08', day:23, type:'draft', project:'Olé初稿'},
         {month:'2026-08', day:21, type:'outline', project:'多力大纲'},
@@ -1811,10 +1830,15 @@
         {month:'2026-09', day:16, type:'shoot', project:'美的小滋味微烤炸一体机 视频'},
         {month:'2026-09', day:18, type:'publish', project:'美的小滋味微烤炸一体机 发布🔒'},
         {month:'2026-09', day:3, type:'publish', project:'WMF发布🔒'},
+        {month:'2026-09', day:7, type:'outline', project:'西班牙橄榄油 大纲'},
+        {month:'2026-09', day:9, type:'script', project:'西班牙橄榄油 脚本'},
+        {month:'2026-09', day:10, type:'shoot', project:'西班牙橄榄油 拍摄'},
+        {month:'2026-09', day:15, type:'draft', project:'西班牙橄榄油 初稿'},
+        {month:'2026-10', day:6, type:'publish', project:'西班牙橄榄油 发布🔒'},
       ],
       suggestions: {
-        '2026-08': '💡 内山窑砂锅发布🔒8/22（今天）。多力菜籽油已接单→大纲8/21 脚本8/25 初稿8/28 🔒9/2发布。Olé探店8/22、初稿8/23。🆕小象黑虎虾：大纲8/24·脚本8/25·拍摄8/27·初稿8/29·🔒8/31发布。🆕WMF纯钛炒锅：脚本8/27·初稿8/31·🔒9/3发布（寄拍需寄回）。🇪🇸西班牙橄榄油初稿目标8/28（脚本审核暂停中需推动）；发布须≥10/3避多力排竞(8/3~10/2)。⚠️多力排竞前后30天，注意与近期发布协调。',
-        '2026-09': '💡 9月三单：多力浓香菜籽油🔒9/2发布（大纲8/21·脚本8/25·初稿8/28）；美的花瓣电饭煲🔒9/9发布（大纲9/1·脚本9/3·视频9/6）；🆕美的小滋味微烤炸一体机🔒9/18发布（大纲9/12·脚本9/14·视频9/16，寄拍需寄回）。⚠️9/18已超出原「多力后子清九月发布不超9.9」铁律，按Pier本单指定放宽。'
+        '2026-08': '💡 内山窑砂锅发布🔒8/22（今天）。多力菜籽油已接单→大纲8/21 脚本8/25 初稿8/28 🔒9/2发布。Olé探店8/22、初稿8/23。🆕小象黑虎虾：大纲8/24·脚本8/25·拍摄8/27·初稿8/29·🔒8/31发布。🆕WMF纯钛炒锅：脚本8/27·初稿8/31·🔒9/3发布（寄拍需寄回）。🇪🇸西班牙橄榄油已调至9月排期（见9月）。⚠️多力排竞前后30天(8/3~10/2)，注意与近期发布协调。',
+        '2026-09': '💡 9月四单：多力浓香菜籽油🔒9/2发布（大纲8/21·脚本8/25·初稿8/28）；美的花瓣电饭煲🔒9/9发布（大纲9/1·脚本9/3·视频9/6）；美的小滋味微烤炸一体机🔒9/18发布（大纲9/12·脚本9/14·视频9/16，寄拍需寄回）；🇪🇸西班牙橄榄油已调至9月从容档期（大纲9/7·脚本9/9·拍摄9/10·初稿9/15·🔒10/6发布，避多力排竞≥10/3）。🔒9/11–9/13 子清锁档：不可拍摄/剪辑，仅可做大纲脚本(你)与发布；美的小滋味大纲9/12正常(你来做)。'
       }
     },
     pier: {
@@ -1857,7 +1881,7 @@
     if (filter === 'all') {
       html += '<div class="rest-legend"><span><span class="dot" style="background:#34c759"></span>🟢 共同休息</span><span><span class="dot" style="background:#ff3b30"></span>🔴 弯弯忙</span><span><span class="dot" style="background:#007aff"></span>🔵 Pier忙</span><span><span class="dot" style="background:linear-gradient(135deg,#ff3b30,#007aff)"></span>🟣 都忙</span><span style="color:var(--accent3)">▣ 今天</span></div>';
     } else {
-      html += '<div class="rest-legend"><span><span class="dot rest-dot"></span>🟢 休息日（点击添加计划）</span><span><span class="dot busy-dot"></span>🔴 任务日（点击看详情）</span><span style="color:var(--accent3)">▣ 今天</span></div>';
+      html += '<div class="rest-legend"><span><span class="dot rest-dot"></span>🟢 可休息</span><span><span class="dot" style="background:#007aff"></span>🔵 大纲/脚本(你可做)</span><span><span class="dot busy-dot"></span>🔴 拍摄/剪辑/初稿(子清忙)</span><span><span class="dot" style="background:#8e8e93"></span>⚪ 发布(轻松)</span><span>🔒 子清锁档</span><span style="color:var(--accent3)">▣ 今天</span></div>';
     }
 
     if (filter === 'all') {
@@ -1961,8 +1985,9 @@
               </div>
             </div>
           </div>
+          <div class="rest-legend" style="margin:8px 0 4px;"><span><span class="dot rest-dot"></span>🟢 可休息</span><span><span class="dot" style="background:#007aff"></span>🔵 大纲/脚本(你可做)</span><span><span class="dot busy-dot"></span>🔴 拍摄/剪辑(子清忙)</span><span><span class="dot" style="background:#8e8e93"></span>⚪ 发布</span><span>🔒 锁档</span></div>
           <div class="rest-mini-cal">${calHtml}</div>
-          ${sugHtml}
+        ${sugHtml}
         </div>`;
 
       // ═══ Ziqing card (always shown in 'all' mode) ═══
@@ -1977,22 +2002,30 @@
 
   function renderPersonRestCard(key, plans) {
     const p = taskData[key];
-    const busySet = new Set(monthBusy(key).map(b => b.day));
+    const monthTasks = monthBusy(key);
     const totalDays = daysInMonth(currentMonth);
-    let restCount = 0, busyCount = 0;
+    let restCount = 0, userCount = 0, heavyCount = 0, lightCount = 0;
+    const lockedDays = (key === 'ziqing' && ZIQING_LOCKED[currentMonth]) ? ZIQING_LOCKED[currentMonth] : [];
 
     let calHtml = '';
     for (let d = 1; d <= totalDays; d++) {
       let cls = 'clickable';
-      if (busySet.has(d)) {
-        cls += ' busy';
-        busyCount++;
+      const dayTasks = monthTasks.filter(b => b.day === d);
+      if (dayTasks.length > 0) {
+        const hasHeavy = dayTasks.some(t => ['shoot','draft','visit'].includes(t.type));
+        const hasUser  = dayTasks.some(t => t.type === 'outline' || t.type === 'script');
+        const hasPub   = dayTasks.some(t => t.type === 'publish');
+        if (hasHeavy)      { cls += ' busy';  heavyCount++; }
+        else if (hasUser)  { cls += ' user';  userCount++; }
+        else if (hasPub)   { cls += ' light'; lightCount++; }
+        else               { cls += ' busy';  heavyCount++; }
       } else {
         cls += ' rest';
         restCount++;
       }
       if (isPast(currentMonth, d)) cls += ' past';
       if (isToday(currentMonth, d)) cls += ' today';
+      if (lockedDays.includes(d)) cls += ' locked';
       const planDot = getPlan(key, d) ? '<span class="plan-dot"></span>' : '';
       calHtml += '<div class="rest-mini-day ' + cls + '" onclick="openDayDetail(\''+key+'\','+d+')">' + d + planDot + '</div>';
     }
@@ -2004,8 +2037,7 @@
     } else if (p.suggestion) {
       sugHtml = '<div class="rest-suggestion">' + p.suggestion + '</div>';
     } else {
-      const allTaskDays = [...busySet].sort((a,b)=>a-b).map(d=>d+'日').join('、');
-      sugHtml = '<div class="rest-no-suggestion">🎉 本月仅'+busyCount+'个任务日（'+allTaskDays+'），其余'+restCount+'天均可自由安排</div>';
+      sugHtml = '<div class="rest-no-suggestion">🎉 本月可自由安排 '+restCount+'天</div>';
     }
 
     return `
@@ -2018,8 +2050,16 @@
               <div class="rest-summary-lbl">可休息</div>
             </div>
             <div class="rest-summary-item">
-              <div class="rest-summary-val red">${busyCount}天</div>
-              <div class="rest-summary-lbl">任务日</div>
+              <div class="rest-summary-val" style="color:#007aff">${userCount}天</div>
+              <div class="rest-summary-lbl">大纲/脚本(你)</div>
+            </div>
+            <div class="rest-summary-item">
+              <div class="rest-summary-val red">${heavyCount}天</div>
+              <div class="rest-summary-lbl">拍摄/剪辑</div>
+            </div>
+            <div class="rest-summary-item">
+              <div class="rest-summary-val" style="color:#8e8e93">${lightCount}天</div>
+              <div class="rest-summary-lbl">发布</div>
             </div>
           </div>
         </div>
@@ -2031,6 +2071,7 @@
   // ═══ Day Detail Modal ═══
   function openDayDetail(person, day) {
     const typeLabel = {outline:'大纲',script:'脚本',shoot:'拍摄',draft:'初稿',visit:'探店',publish:'发布'};
+    function typeColor(type){ if(type==='outline'||type==='script') return '#007aff'; if(type==='publish') return '#8e8e93'; return '#ff3b30'; }
     let bodyHtml = '';
 
     if (person === 'couple') {
@@ -2091,12 +2132,14 @@
       document.getElementById('dayModalTitle').innerHTML = p.emoji + ' ' + p.name + ' · ' + mLabel + '月' + day + '日';
       const busySet = new Set(monthBusy(person).map(b => b.day));
       const past = isPast(currentMonth, day);
+      const isLocked = (person === 'ziqing' && ZIQING_LOCKED[currentMonth] && ZIQING_LOCKED[currentMonth].includes(day));
+      const lockNote = isLocked ? '<div style="background:#fff3e0;border-left:3px solid #ff9500;padding:8px 10px;border-radius:8px;font-size:12px;color:#8c6d1f;margin-bottom:10px;">🔒 子清锁档日：不可安排拍摄/剪辑，仅可做大纲脚本(你)与发布</div>' : '';
 
       if (busySet.has(day) && !past) {
         const tasks = monthBusy(person).filter(b => b.day === day);
         bodyHtml = '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;">📋 当日任务：</div>';
         tasks.forEach(t => {
-          bodyHtml += '<div class="day-task-item"><span class="task-type">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+'</div>';
+          bodyHtml += '<div class="day-task-item"><span class="task-type" style="background:'+typeColor(t.type)+'">'+(typeLabel[t.type]||t.type)+'</span> '+t.project+'</div>';
         });
       } else if (busySet.has(day) && past) {
         const tasks = monthBusy(person).filter(b => b.day === day);
@@ -2116,6 +2159,7 @@
           bodyHtml += '<button class="day-plan-delete" onclick="deleteDayPlan(\''+person+'\','+day+')">🗑 删除计划</button>';
         }
       }
+      bodyHtml = lockNote + bodyHtml;
     }
 
     document.getElementById('dayModalBody').innerHTML = bodyHtml;
