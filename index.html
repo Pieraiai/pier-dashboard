@@ -329,6 +329,7 @@
   .rest-mini-day.rest      { background:#e8f8ed; color:#34c759; }
   .rest-mini-day.busy      { background:#fff0ef; color:#ff3b30; font-weight:700; }
   .rest-mini-day.user      { background:#e3f2ff; color:#007aff; font-weight:700; }   /* 🔵 大纲/脚本：你(用户)可做 */
+  .rest-mini-day.split     { color:#fff; font-weight:700; }                         /* 🟰 多类型同天：红蓝灰分色 */
   .rest-mini-day.light     { background:#f0f0f5; color:#8e8e93; }                     /* ⚪ 发布：轻松活儿 */
   .rest-mini-day.ww-only   { background:#ff3b30; color:#fff; font-weight:700; }
   .rest-mini-day.pr-only   { background:#007aff; color:#fff; font-weight:700; }
@@ -1906,7 +1907,7 @@
     if (filter === 'all') {
       html += '<div class="rest-legend"><span><span class="dot" style="background:#34c759"></span>🟢 共同休息</span><span><span class="dot" style="background:#ff3b30"></span>🔴 弯弯忙</span><span><span class="dot" style="background:#007aff"></span>🔵 Pier忙</span><span><span class="dot" style="background:linear-gradient(135deg,#ff3b30,#007aff)"></span>🟣 都忙</span><span style="color:var(--accent3)">▣ 今天</span></div>';
     } else {
-      html += '<div class="rest-legend"><span><span class="dot rest-dot"></span>🟢 可休息</span><span><span class="dot" style="background:#007aff"></span>🔵 大纲/脚本(你可做)</span><span><span class="dot busy-dot"></span>🔴 拍摄/剪辑/初稿(子清忙)</span><span><span class="dot" style="background:#8e8e93"></span>⚪ 发布(轻松)</span><span>🔒 子清锁档</span><span style="color:var(--accent3)">▣ 今天</span></div>';
+      html += '<div class="rest-legend"><span><span class="dot rest-dot"></span>🟢 可休息</span><span><span class="dot" style="background:#007aff"></span>🔵 大纲/脚本(你可做)</span><span><span class="dot busy-dot"></span>🔴 拍摄/剪辑/初稿(子清忙)</span><span><span class="dot" style="background:#8e8e93"></span>⚪ 发布(轻松)</span><span><span class="dot" style="background:linear-gradient(90deg,#ff3b30 50%,#007aff 50%)"></span>🟰 多类型分色</span><span>🔒 子清锁档</span><span style="color:var(--accent3)">▣ 今天</span></div>';
     }
 
     if (filter === 'all') {
@@ -2010,7 +2011,7 @@
               </div>
             </div>
           </div>
-          <div class="rest-legend" style="margin:8px 0 4px;"><span><span class="dot rest-dot"></span>🟢 可休息</span><span><span class="dot" style="background:#007aff"></span>🔵 大纲/脚本(你可做)</span><span><span class="dot busy-dot"></span>🔴 拍摄/剪辑(子清忙)</span><span><span class="dot" style="background:#8e8e93"></span>⚪ 发布</span><span>🔒 锁档</span></div>
+          <div class="rest-legend" style="margin:8px 0 4px;"><span><span class="dot rest-dot"></span>🟢 可休息</span><span><span class="dot" style="background:#007aff"></span>🔵 大纲/脚本(你可做)</span><span><span class="dot busy-dot"></span>🔴 拍摄/剪辑(子清忙)</span><span><span class="dot" style="background:#8e8e93"></span>⚪ 发布</span><span><span class="dot" style="background:linear-gradient(90deg,#ff3b30 50%,#007aff 50%)"></span>🟰 多类型分色</span><span>🔒 锁档</span></div>
           <div class="rest-mini-cal">${calHtml}</div>
         ${sugHtml}
         </div>`;
@@ -2035,15 +2036,29 @@
     let calHtml = '';
     for (let d = 1; d <= totalDays; d++) {
       let cls = 'clickable';
+      let bgStyle = '';
       const dayTasks = monthTasks.filter(b => b.day === d);
       if (dayTasks.length > 0) {
         const hasHeavy = dayTasks.some(t => ['shoot','draft','visit'].includes(t.type));
         const hasUser  = dayTasks.some(t => t.type === 'outline' || t.type === 'script');
         const hasPub   = dayTasks.some(t => t.type === 'publish');
+        // 统计（按优先级归入单一桶，保持顶部数字口径不变）
         if (hasHeavy)      { cls += ' busy';  heavyCount++; }
         else if (hasUser)  { cls += ' user';  userCount++; }
         else if (hasPub)   { cls += ' light'; lightCount++; }
         else               { cls += ' busy';  heavyCount++; }
+        // 多类型同天 → 红/蓝/灰按比例分色铺满，不再压成纯红
+        const catColors = [];
+        if (hasHeavy) catColors.push('#ff3b30');
+        if (hasUser)  catColors.push('#007aff');
+        if (hasPub)   catColors.push('#8e8e93');
+        if (catColors.length > 1) {
+          cls = cls.replace(' busy','').replace(' user','').replace(' light','') + ' split';
+          const n = catColors.length, step = 100 / n;
+          const stops = [];
+          catColors.forEach((c, i) => { stops.push(c + ' ' + (i*step) + '%'); stops.push(c + ' ' + ((i+1)*step) + '%'); });
+          bgStyle = ' style="background:linear-gradient(90deg,' + stops.join(',') + ');"';
+        }
       } else {
         cls += ' rest';
         restCount++;
@@ -2052,7 +2067,7 @@
       if (isToday(currentMonth, d)) cls += ' today';
       if (lockedDays.includes(d)) cls += ' locked';
       const planDot = getPlan(key, d) ? '<span class="plan-dot"></span>' : '';
-      calHtml += '<div class="rest-mini-day ' + cls + '" onclick="openDayDetail(\''+key+'\','+d+')">' + d + planDot + '</div>';
+      calHtml += '<div class="rest-mini-day ' + cls + '"' + bgStyle + ' onclick="openDayDetail(\''+key+'\','+d+')">' + d + planDot + '</div>';
     }
 
     let sugHtml = '';
